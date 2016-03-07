@@ -1,0 +1,25 @@
+<html>
+<head>
+<meta http-equiv="contect-type" content="text/html; charset=utf-8" />
+<title>Upload</title>
+</head>
+<body>
+
+<h3>Upload</h3>
+<p>CURL can also upload a file (upload_max_filesize &lt; 8M): </p>
+<p><i>curl -F myfile=@/path/to/file http://192.168.0.119/~lkp/upload.php</i></p>
+
+<p>------------------------------</p>
+<form action="./upload.php" method="post" enctype="multipart/form-data" name="upload">
+upload:
+<input name="myfile" type="file" size="30" maxlength="32" />
+<br><br>
+
+<input type="submit" name="submit" value="Submit" />
+<input type="reset" name="reset" value="Reset" />
+
+</form>
+</div>
+
+</body>
+</html>
