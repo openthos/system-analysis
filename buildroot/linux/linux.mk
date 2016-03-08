@@ -66,7 +66,7 @@ LINUX_MAKE_FLAGS = \
 	HOSTCC="$(HOSTCC)" \
 	HOSTCFLAGS="$(HOSTCFLAGS)" \
 	ARCH=$(KERNEL_ARCH) \
-	INSTALL_MOD_PATH=$(TARGET_DIR) \
+	INSTALL_MOD_PATH=$(TARGET_DIR)/MOD \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
 	DEPMOD=$(HOST_DIR)/sbin/depmod
 
@@ -279,6 +279,7 @@ define LINUX_BUILD_CMDS
 	$(if $(BR2_LINUX_KERNEL_USE_CUSTOM_DTS),
 		cp $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_DTS_PATH)) $(KERNEL_ARCH_PATH)/boot/dts/)
 	$(LINUX_MAKE_ENV) $(MAKE) $(LINUX_MAKE_FLAGS) -C $(@D) $(LINUX_TARGET_NAME)
+	mkdir -p $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) ;\
 	@if grep -q "CONFIG_MODULES=y" $(@D)/.config; then 	\
 		$(LINUX_MAKE_ENV) $(MAKE) $(LINUX_MAKE_FLAGS) -C $(@D) modules ;	\
 	fi
@@ -304,7 +305,8 @@ endef
 
 
 define LINUX_INSTALL_IMAGES_CMDS
-	cp $(LINUX_IMAGE_PATH) $(BINARIES_DIR)
+	cp $(LINUX_IMAGE_PATH) $(BINARIES_DIR) ; \
+	cp $(LINUX_IMAGE_PATH) $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID)/vmlinuz-$(LINUX_VERSION_PROBED) ;\
 	$(LINUX_INSTALL_DTB)
 endef
 
@@ -314,8 +316,11 @@ define LINUX_INSTALL_TARGET_CMDS
 	# directories, not relevant on the target
 	@if grep -q "CONFIG_MODULES=y" $(@D)/.config; then 	\
 		$(LINUX_MAKE_ENV) $(MAKE1) $(LINUX_MAKE_FLAGS) -C $(@D) modules_install; \
-		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
-		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
+		$(LINUX_MAKE_ENV) $(MAKE1) $(LINUX_MAKE_FLAGS) -C $(@D) firmware_install; \
+		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
+		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
+		cd $(TARGET_DIR)/MOD && find lib | cpio -o -H newc --owner=root.root | gzip -n -9 > modules.cgz ; \
+		cp modules.cgz $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID)/ ; cd - ;\
 	fi
 	$(LINUX_INSTALL_HOST_TOOLS)
 endef

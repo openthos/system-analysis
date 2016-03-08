@@ -2,8 +2,8 @@
 
 linux_repo="/media/vdb1/xly/linux"
 
-tmp_branch="/home/chy/xly/kernelci/test_"
-build_sh="/home/chy/xly/kernelci/build.sh"
+tmp_branch="/home/chy/xly/kernelci/ka/tmp_branch"
+build_sh="/home/chy/xly/kernelci/ka/build.sh"
 
 cd $linux_repo
 
