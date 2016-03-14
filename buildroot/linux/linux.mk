@@ -279,7 +279,6 @@ define LINUX_BUILD_CMDS
 	$(if $(BR2_LINUX_KERNEL_USE_CUSTOM_DTS),
 		cp $(call qstrip,$(BR2_LINUX_KERNEL_CUSTOM_DTS_PATH)) $(KERNEL_ARCH_PATH)/boot/dts/)
 	$(LINUX_MAKE_ENV) $(MAKE) $(LINUX_MAKE_FLAGS) -C $(@D) $(LINUX_TARGET_NAME)
-	mkdir -p $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) ;\
 	@if grep -q "CONFIG_MODULES=y" $(@D)/.config; then 	\
 		$(LINUX_MAKE_ENV) $(MAKE) $(LINUX_MAKE_FLAGS) -C $(@D) modules ;	\
 	fi
@@ -319,6 +318,8 @@ define LINUX_INSTALL_TARGET_CMDS
 		$(LINUX_MAKE_ENV) $(MAKE1) $(LINUX_MAKE_FLAGS) -C $(@D) firmware_install; \
 		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
 		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
+		mkdir -p $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) ;\
+		echo $(BRANCH_NAME) $$(uname -s)/$$(uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) >> $(WEB_PATH)/branch_commid ;\
 		cd $(TARGET_DIR)/MOD && find lib | cpio -o -H newc --owner=root.root | gzip -n -9 > modules.cgz ; \
 		cp modules.cgz $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID)/ ; cd - ;\
 	fi

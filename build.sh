@@ -37,6 +37,7 @@ cp $buildroot_config $buildroot_path/.config
 
 echo -e "
 WEB_PATH=\"$web_path\"
+BRANCH_NAME=\"$branch_name\"
 COMMIT_ID=\"$commit_id\"
 BR2_DEFCONFIG=\"$buildroot_path/configs/qemu_x86_64_defconfig\"
 BR2_LINUX_KERNEL_CUSTOM_LOCAL_PATH=\"$linux_repo\"
