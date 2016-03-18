@@ -1,6 +1,6 @@
 #!/bin/bash
 
-linux_repo="/media/vdb1/xly/linux"
+linux_repo="/media/vdb1/xly/common"
 
 tmp_branch="/home/chy/xly/kernelci/ka/tmp_branch"
 build_sh="/home/chy/xly/kernelci/ka/build.sh"
@@ -18,25 +18,31 @@ remote_branches=$(git branch -r | sed -e "1d" -e  "s/origin\///")
 
 echo -e "All branches: ($remote_branches)"
 
+#remote_branches="master"
+remote_branches="kernel-4.4"
+
 for br_ in $remote_branches
 do 
 
-	old_br_com=$(cat $tmp_branch/$br_) #old_branch_commit
+	old_br_com=(`cat $tmp_branch/$br_`) #old_branch_commit
 
 git checkout $br_
 
-br_com=$(git log -1 --pretty=format:"%H")
+br_com=(`git log -1 --pretty=format:"%H %cd" --date=raw` )
 
-if [ "$old_br_com"x = "$br_com"x ]
+if [ "${old_br_com[0]}"x = "${br_com[0]}"x ]
 then
 	continue
 else
-	echo $br_com > $tmp_branch/$br_
+	echo ${br_com[@]} > $tmp_branch/$br_
 fi
 
-#do not contain old_commit_id 
 #git log --pretty=format:"%H %cd" --date=raw "$old_commit_id"..
-branch_log=$(git log --pretty=format:"%H" ${old_br_com}..)
+
+#x#do not contain old_commit_id 
+#branch_log=$(git log --pretty=format:"%H" ${old_br_com}..)
+
+branch_log=$(git log --pretty=format:"%H" --since=${old_br_com[1]} )
 
 echo -e "Branch $br_: ($branch_log)"
 

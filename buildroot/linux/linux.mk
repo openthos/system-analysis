@@ -319,7 +319,7 @@ define LINUX_INSTALL_TARGET_CMDS
 		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
 		rm -f $(TARGET_DIR)/MOD/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
 		mkdir -p $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) ;\
-		echo $(BRANCH_NAME) $$(uname -s)/$$(uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) >> $(WEB_PATH)/branch_commid ;\
+		echo $(BRANCH_NAME) $$(uname -s)/$$(uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID) vmlinuz-$(LINUX_VERSION_PROBED) >> $(WEB_PATH)/branch_commid ;\
 		cd $(TARGET_DIR)/MOD && find lib | cpio -o -H newc --owner=root.root | gzip -n -9 > modules.cgz ; \
 		cp modules.cgz $(WEB_PATH)/pkg/$(shell uname -s)/$(shell uname -n)/gcc-$(BR2_GCC_VERSION)/$(COMMIT_ID)/ ; cd - ;\
 	fi
