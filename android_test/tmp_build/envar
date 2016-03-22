@@ -1,0 +1,2 @@
+export Releases=(marshmallow-x86 lollipop-x86 kitkat-x86)
+export JDK1_6=/home/chy/xly/kernelci/ka/android_test/deps/jdk1.6.0_45/bin
