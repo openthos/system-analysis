@@ -1,9 +1,12 @@
 #!/bin/bash
 
-linux_repo="/media/vdb1/xly/common"
+dirname_path=$(cd `dirname $0`; pwd)
 
-tmp_branch="/home/chy/xly/kernelci/ka/tmp_branch"
-build_sh="/home/chy/xly/kernelci/ka/build.sh"
+build_sh="$dirname_path/build.sh"
+tmp_branch="$dirname_path/tmp_branch"
+source $tmp_branch/envar
+
+#linux_repo="/media/vdb1/xly/common"
 
 cd $linux_repo
 
@@ -55,7 +58,7 @@ do
 	echo -e "\033[32m Running $br_ $tmp_branch/$log_ \033[0m"
 	/bin/bash $tmp_branch/$log_
 
-	sleep 1
+	sleep 5
 done
 
 #for loop

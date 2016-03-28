@@ -4,13 +4,13 @@
 #Android 5.x (Lollipop) - Android 6.0 (Marshmallow): Java 7
 #Android 2.3.x (Gingerbread) - Android 4.4.x (KitKat): Java 6
 
-android_x86_repo="$1"
+#android_x86_repo="$1"
 
 #marshmallow_x86_repo=""
 #lollipop_x86=""
 #kitkat_x86=""
 
-android_test_path=$(pwd)
+android_test_path=$(cd `dirname $0`; pwd)
 
 echo -e 'export Releases=(marshmallow-x86 lollipop-x86 kitkat-x86)' > $android_test_path/tmp_build/envar
 
@@ -38,7 +38,8 @@ sudo apt-get install python python-mako python-networkx clang yasm
 
 else
 cd $android_test_path/deps
-sudo dpkg -i *.deb
+#sudo dpkg -i *.deb
+echo -e "ERROR!"
 
 fi
 

@@ -7,7 +7,7 @@ fi
 
 #release_name=""
 android_x86_repo="$1"
-android_test_path=$(pwd)
+android_test_path=$(cd `dirname $0`; pwd)
 
 source $android_test_path/tmp_build/envar
 
@@ -35,3 +35,4 @@ lunch $target_build
 m -j8 iso_img
 
 echo -e "\n----- out directory: out/target/product/ -----\n"
+

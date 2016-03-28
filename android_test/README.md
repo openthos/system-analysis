@@ -21,11 +21,11 @@
 
 ### Android-x86 releases
 * marshmallow-x86
-> Based on Android 6.0 release (Marshmallow).
+` Based on Android 6.0 release (Marshmallow).`
 * lollipop-x86
-> Based on Android 5.0 release (Lollipop).
+` Based on Android 5.0 release (Lollipop).`
 * kitkat-x86
-> Based on Android 4.4 release (KitKat).
+` Based on Android 4.4 release (KitKat).`
 
 ### Getting started
 1.Install packages

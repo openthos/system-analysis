@@ -1,23 +1,28 @@
 #!/bin/bash
 
 unset LD_LIBRARY_PATH
+dirname_path=$(cd `dirname $0`; pwd)
 
+buildroot_path="$dirname_path/buildroot"
+tmp_branch="$dirname_path/tmp_branch"
+
+source $tmp_branch/envar
 #linux_repo="/c/repo/linux"
-linux_repo="/media/vdb1/xly/common"
+#linux_repo="/media/vdb1/xly/common"
 #linux_config="$linux_repo/arch/x86/configs/x86_64_defconfig"
 
-tmp_branch="/home/chy/xly/kernelci/ka/tmp_branch"
+#tmp_branch="/home/chy/xly/kernelci/ka/tmp_branch"
 branch_name="$1"
 commit_id="$2"
 
-buildroot_path="/home/chy/xly/kernelci/ka/buildroot"
+#buildroot_path="/home/chy/xly/kernelci/ka/buildroot"
 buildroot_linux="$buildroot_path/output/build/linux-custom"
 buildroot_mod="$buildroot_path/output/MOD"
 buildroot_config="$buildroot_path/buildroot_config2"
 
 linux_config="$buildroot_path/linux_config"
 
-web_path="/var/www/html/~lkp"
+#web_path="/var/www/html/~lkp"
 
 cd $linux_repo
 
