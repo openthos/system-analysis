@@ -9,10 +9,10 @@ git clone git://gitscm.sf.net/gitroot/android-x86/kernel/common
 
 ## install packages
 ```
-sudo apt-get install git-core gnupg flex bison gperf build-essential \
-zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
-lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache \
-libgl1-mesa-dev libxml2-utils xsltproc unzip \
+sudo apt-get install git-core gnupg flex bison gperf build-essential 
+zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 
+lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache 
+libgl1-mesa-dev libxml2-utils xsltproc unzip 
 apache2
 
 #set up the apache2, to run it normally.

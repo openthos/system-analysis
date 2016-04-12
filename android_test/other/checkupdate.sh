@@ -14,7 +14,14 @@ do
 	cd $android_repo_path
 
 	#echo $prj_ 
-	cd $prj_*
+	#cd $prj_*
+	cd "${prj_}.git"
+	if [ $? -ne 0 ]; then
+	echo -e "\033[31m$prj_\033[0m"
+	echo '------------------------------'
+	continue
+	fi
+
 	base_loginfo=(` git log -1 --pretty=format:"%h %cd %ae \"%an\"" --date=iso `)
 	if [ ! -n "${base_loginfo[5]}" ]; then
 	echo -e "\033[31m$prj_\033[0m"
