@@ -51,6 +51,12 @@ do
 	continue
 	fi
 
+###new git remote
+#	new_gitremote=$( git remote -v | awk ' /github.com\/openthos/ { gsub(/openthos_/,"oto_",$2); print $2; exit}')
+#	sudo git remote remove github
+#	sudo git remote add github $new_gitremote
+###new git remote
+
 ### git push base
 	if [ "$prj_"x = "kernel/common"x ];then
 	echo -e "\033[1m$prj_\033[0m"
