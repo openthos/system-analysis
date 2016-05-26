@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>Highcharts</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" type="text/css" href="./highcharts_files/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./highcharts_files/style.css">
+<script src="./highcharts_files/hm.js"></script><script src="./highcharts_files/share.js"></script><link rel="stylesheet" href="./highcharts_files/share_style0_24.css"></head>
+
+<body>
+
+	<div id="demo" >
+		<div id="demo_content">
+			<div class="page-header">
+				<h1>LKP charts</h1>
+				<div class="subtitle">
+
+					<p class="single">Linux Kernel Performance tests result </p>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+			<div align="center">
+			<form action="http://g.cn" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+
+
+			<div style="float:left; text-align:left">
+			<div id="demo_url">
+			<p class="line"><span class="title">
+			xAxis:
+			</span></div>
+
+			&nbsp;<input type="radio" name="xaxis" value="benchmarks">benchmarks
+			&nbsp;<input type="radio" checked="checked" name="xaxis" value="kernels">kernels
+			&nbsp;<input type="radio" name="xaxis" value="compilers" disabled>compilers (gcc-4.9 or gcc-5)
+			&nbsp;&nbsp;
+			</div>
+			<div class="clear"></div>
+
+			<div style="float:left; text-align:right">
+			<div id="demo_url">
+			<p class="line"><span class="title">
+			benchmarks:
+			&nbsp;&nbsp;
+			</span></div>
+
+			&nbsp;
+			<select name="benchmarks" >
+
+			<option value="aim7">aim7</option>
+			<option value="angrybirds">angrybirds</option>
+			<option value="audio">audio</option>
+			<option value="autotest">autotest</option>
+			<option value="blogbench">blogbench</option>
+			<option value="cpu-hotplug">cpu-hotplug</option>
+			<option value="dbench">dbench</option>
+			<option value="dd-write">dd-write</option>
+			<option value="ebizzy">ebizzy</option>
+			<option value="ext4-frags">ext4-frags</option>
+			<option value="fileio">fileio</option>
+			<option value="fishtank">fishtank</option>
+			<option value="fsmark">fsmark</option>
+			<option value="ftq">ftq</option>
+			<option value="ftrace_onoff">ftrace_onoff</option>
+			<option value="fwq">fwq</option>
+			<option value="glbenchmark">glbenchmark</option>
+			<option value="hackbench">hackbench</option>
+			<option value="hpcc">hpcc</option>
+			<option value="idle">idle</option>
+			<option value="iozone">iozone</option>
+			<option value="iperf">iperf</option>
+			<option value="jsbenchmark">jsbenchmark</option>
+			<option value="kbuild">kbuild</option>
+			<option value="kernel_selftests">kernel_selftests</option>
+			<option value="ku-latency">ku-latency</option>
+			<option value="kvm-unit-tests">kvm-unit-tests</option>
+			<option value="linpack">linpack</option>
+			<option value="locktorture">locktorture</option>
+			<option value="ltp">ltp</option>
+			<option value="mce-test">mce-test</option>
+			<option value="mlc">mlc</option>
+			<option value="ndctl">ndctl</option>
+			<option value="nepim">nepim</option>
+			<option value="netpipe" selected="selected">netpipe</option>
+			<option value="nuttcp">nuttcp</option>
+			<option value="octane">octane</option>
+			<option value="oltp">oltp</option>
+			<option value="openarena">openarena</option>
+			<option value="otc_kernel_qa-ts_ltp_ddt">otc_kernel_qa-ts_ltp_ddt</option>
+			<option value="packetdrill">packetdrill</option>
+			<option value="pbzip2">pbzip2</option>
+			<option value="perf-bench-numa-mem">perf-bench-numa-mem</option>
+			<option value="perf-bench-sched-pipe">perf-bench-sched-pipe</option>
+			<option value="pft">pft</option>
+			<option value="phoronix-test-suite">phoronix-test-suite</option>
+			<option value="piglit">piglit</option>
+			<option value="pigz">pigz</option>
+			<option value="pixz">pixz</option>
+			<option value="plzip">plzip</option>
+			<option value="pm-qa">pm-qa</option>
+			<option value="postmark">postmark</option>
+			<option value="pxz">pxz</option>
+			<option value="qperf">qperf</option>
+			<option value="rcutorture">rcutorture</option>
+			<option value="reaim">reaim</option>
+			<option value="result">result</option>
+			<option value="siege">siege</option>
+			<option value="sockperf">sockperf</option>
+			<option value="speccpu">speccpu</option>
+			<option value="specjbb2013">specjbb2013</option>
+			<option value="specjbb2015">specjbb2015</option>
+			<option value="specpower">specpower</option>
+			<option value="stutter">stutter</option>
+			<option value="sunspider">sunspider</option>
+			<option value="suspend">suspend</option>
+			<option value="swap">swap</option>
+			<option value="tbench">tbench</option>
+			<option value="tcrypt">tcrypt</option>
+			<option value="thrulay">thrulay</option>
+			<option value="tlbflush">tlbflush</option>
+			<option value="trinity">trinity</option>
+			<option value="unixbench">unixbench</option>
+			<option value="xfstests">xfstests</option>
+
+			</select>
+			</div>
+			<div class="clear"></div>
+
+			<p class="edit">
+			<input class="btn btn-success" type="submit" value="SUBMIT" >
+			<input class="btn btn-inverse" type="reset" value="CLEAR" >
+			</p>
+
+			</form>
+			</div>
+			<div class="clear"></div>
+
+			<!--
+			<div id="demo_url">
+					<p class="line"><span class="title">本例固定链接：</span>
+					<input type="text" value="http://www.hcharts.cn/demo/index.php?p=10">
+
+			</div>
+			<div class="clear"></div>
+			-->
+			
+			</div>
+		<div class="clear"></div>
+
+
+	</div>
+
+
+
+<script type="text/javascript" src="./highcharts_files/jquery.min.js"></script>
+<script type="text/javascript" src="./highcharts_files/bootstrap.min.js"></script>
+<script type="text/javascript" src="./highcharts_files/jquery.scrollUp.min.js"></script>
+<script type="text/javascript" src="./highcharts_files/common.js"></script>	<script type="text/javascript" src="./highcharts_files/highcharts.js"></script>
+	<script type="text/javascript" src="./highcharts_files/exporting.js"></script>
+				<script type="text/javascript" src="./highcharts_files/line-basic.js"></script>
+
+</body></html>
