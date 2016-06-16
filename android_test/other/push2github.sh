@@ -1,13 +1,20 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+        echo -e "Usage: $0 GITuser:GITpassword"
+        exit
+fi
+
 dirname_path=$(cd `dirname $0`; pwd)
-usr_psw="user:password"
+#usr_psw="user:password"
+usr_psw="$1"
 #git config --global credential.helper cache
 android_x86="/opt/git/lollipop-x86"
 
 #####
 
-new_repo="kernel bootable/newinstaller device/generic/common packages/apps/Settings packages/apps/Mms" #manifest.xml $path
+#new_repo="kernel bootable/newinstaller device/generic/common packages/apps/Settings packages/apps/Mms" #manifest.xml $path
+new_repo="packages/apps/OtoSettings"
 
 #####
 
@@ -36,11 +43,11 @@ echo -e "\033[31mCD to $repo_ ERROR!\033[0m"
 continue
 fi
 
-repo_name="openthos_$(echo $repo_ |sed "s/\//_/g")"
+repo_name="oto_$(echo $repo_ |sed "s/\//_/g")"
 echo -e "\033[32m$repo_name\033[0m"
 
-pwd
-continue
+#pwd
+#continue
 
 ##### create github repos
 sleep 2

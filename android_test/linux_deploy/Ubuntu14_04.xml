@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="architecture">amd64</string>
+    <string name="diskimage">/dev/block/sdb2</string>
+    <string name="vncdepth">16</string>
+    <string name="mountdir">/data/local/linux</string>
+    <string name="vncdisplay">0</string>
+    <set name="xcomponents">
+        <string>xserver</string>
+        <string>desktop</string>
+        <string>vnc</string>
+        <string>ssh</string>
+    </set>
+    <string name="fstype">ext4</string>
+    <boolean name="customstartup" value="false" />
+    <string name="deploytype">partition</string>
+    <string name="vncheight">768</string>
+    <string name="password">changeme</string>
+    <boolean name="sshstartup" value="true" />
+    <boolean name="custommounts" value="false" />
+    <string name="serverdns"></string>
+    <string name="locale">en_US.UTF-8</string>
+    <string name="distribution">ubuntu</string>
+    <string name="suite">trusty</string>
+    <string name="username">android</string>
+    <string name="guitype">vnc</string>
+    <boolean name="guistartup" value="true" />
+    <string name="mirror">http://mirrors.ustc.edu.cn/ubuntu/</string>
+    <string name="vncdpi">75</string>
+    <string name="disksize">0</string>
+    <string name="desktopenv">xfce</string>
+    <string name="vncargs"></string>
+    <string name="vncwidth">1024</string>
+</map>
