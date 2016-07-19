@@ -1,5 +1,11 @@
 # system-analysis
+### Goal
 analysis&update&implementation systems in OTO.
+
+### work list
+- kernels 
+- system libs
+- android libs
 
 ## kernelci-analysis
 
