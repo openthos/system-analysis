@@ -3,9 +3,11 @@
 analysis&update&implementation systems in OTO.
 
 ### work list
-- kernels 
+- kernels & drivers
 - system libs
 - android libs
+- support for OTO autotest
+- support for kernel CI
 
 ## kernelci-analysis
 
