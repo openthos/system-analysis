@@ -13,7 +13,7 @@ analysis&update&implementation systems in OTO.
 
 ### download this repo and the android-x86 linux kernel
 ```
-git clone https://github.com/openthos/kernelci-analysis.git
+git clone https://github.com/openthos/system-analysis.git
 
 git clone git://gitscm.sf.net/gitroot/android-x86/kernel/common
 ```
