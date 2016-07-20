@@ -44,5 +44,5 @@ cp -rf /path/to/kernelci-analysis/web_server/*  ~lkp/
 
 ## about android-x86 test
 
-### see android_test/README.md
+ - see android_test/README.md
 
