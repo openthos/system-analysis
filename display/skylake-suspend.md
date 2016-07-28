@@ -2,12 +2,12 @@
 清华同方T45机器在屏幕灭之后会自动重启  
 ###2.调查分析
 根据问题发生的现象可以推断到这个是和睡眠相关的问题，根据以下方法可以进一步缩小和确认问题范围:  
-`echo test > /sys/power/wake_lock`
-`echo mem > /sys/power/state`  
+`echo test > /sys/power/wake_lock`　　
+`echo mem > /sys/power/state` 　 
 上述方法可以防止系统进入suspend;按照上述方法做之后可以看到系统屏幕依然会灭，但是不会重启；  
 结论1:问题和suspend过程有关  
 分析suspend的过程中的事件:  
-`check wake_lock-->suspend devices-->suspend cpu-->physical suspend`  
+`check wake_lock-->suspend devices-->suspend cpu-->physical suspend` 　 
 可以在这一系列事件中中断ｓｕｓｐｅｎｄ过程，发现是在suspend devices环节出现问题；  
 方向2:判断硬件问题和软件问题  
 如果是软件问题就好说了，可以通过调试手段查找；如果是硬件问题，只能是请ｐｃ生产商进行诊断问题；  
