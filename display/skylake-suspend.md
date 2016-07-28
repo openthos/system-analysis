@@ -16,7 +16,7 @@
 拿着手机录下屏幕的日志，慢放查找log  
 最后发现日志的最后堆栈是在kernel/sound/soc/intel/skylake/skl-sst-ipc.c文件中，这个最终编译成一个.ko的形式  
 存在，通过rmmod snd-soc-skl-ipc.ko和snd-soc-skl.ko之后，机器不再重启  
-*那么如果永久去除这个ko有什么影响呢?* 
+*那么如果永久去除这个ko有什么影响呢?*　　 
 通过阅读driver的comment,网上查询，可以确定这个driver是为了cpu内置显卡在插入hdmi时播放声音用的，oto暂时对这个功能不关注  
 决定暂时disable掉绕过该问题．
 ###3.解决方案
