@@ -14,7 +14,8 @@ android_x86="/opt/git/lollipop-x86"
 #####
 
 #new_repo="kernel bootable/newinstaller device/generic/common packages/apps/Settings packages/apps/Mms" #manifest.xml $path
-new_repo="packages/apps/OtoSettings"
+#new_repo="packages/apps/OtoSettings"
+new_repo="frameworks/opt/net/ethernet hardware/drm_gralloc system/core system/media"
 
 #####
 
@@ -61,6 +62,9 @@ fi
 
 sudo git remote add github  https://github.com/openthos/$repo_name
 
+#update manually
+continue
+
 git log -1 lollipop-x86 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 echo -e "\033[1maosp:refs/tags/android-5.1.1_r30\033[0m"
@@ -76,7 +80,8 @@ if [ $? -ne 0 ]; then
 echo -e "\033[31mPush $repo_name ERROR!\033[0m"
 fi
 
-sudo git push -u github singlewindow
+#do not update to github again
+#sudo git push -u github singlewindow
 
 #sudo git remote add github  https://github.com/openthos/openthos_frameworks_native.git
 #sudo git push -u github lollipop-x86 multiwindow singlewindow  

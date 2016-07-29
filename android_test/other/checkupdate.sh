@@ -28,7 +28,7 @@ fi
 cd $android_repo_path
 
 all_projects=$($Repo list | awk '$3 !~ /^(git-repo|manifest)/ {print $3}')
-all_projects+="  platform/packages/apps/OtoSettings"
+all_projects+="  platform/packages/apps/OtoSettings  platform/packages/apps/Printer"
 #echo $all_projects
 #exit
 
@@ -53,9 +53,10 @@ do
 	fi
 
 	multi_loginfo=(` git log multiwindow -1 --pretty=format:"%h %cd %ae \"%an\"" --date=iso `)
-	single_loginfo=(` git log singlewindow -1 --pretty=format:"%h %cd %ae \"%an\"" --date=iso `)
+	#single_loginfo=(` git log singlewindow -1 --pretty=format:"%h %cd %ae \"%an\"" --date=iso `)
 
-	if [ "${base_loginfo[0]}"x = "${multi_loginfo[0]}"x -a "${base_loginfo[0]}"x = "${single_loginfo[0]}"x ]
+	#if [ "${base_loginfo[0]}"x = "${multi_loginfo[0]}"x -a "${base_loginfo[0]}"x = "${single_loginfo[0]}"x ]
+	if [ "${base_loginfo[0]}"x = "${multi_loginfo[0]}"x ]
 	then
 		continue
 	fi
@@ -115,7 +116,7 @@ do
 	echo -e "\033[1m$prj_\033[0m"
 	git push github master
 
-	elif [ "$prj_"x = "platform/packages/apps/OtoSettings"x ];then
+	elif [ "$prj_"x = "platform/packages/apps/OtoSettings"x -o "$prj_"x = "platform/packages/apps/Printer"x ];then
 	echo -e "\033[1m$prj_\033[0m"
 	git push github base
 
@@ -137,7 +138,8 @@ do
 	echo -e "\033[31mPush $repo_name ERROR!\033[0m"
 	fi
 
-	git push github singlewindow
+	#git push github singlewindow
+	#2016-06-16 singlewindow branch do not update to github
 
 	continue
 	fi #up2
@@ -145,7 +147,7 @@ do
 	echo -e "\033[32m$prj_\033[0m"
 	echo -e "               \033[1m${base_loginfo[@]}\033[0m"
 	echo -e "multiwindow  : ${multi_loginfo[@]}"
-	echo -e "singlewindow : ${single_loginfo[@]}"
+	#echo -e "singlewindow : ${single_loginfo[@]}"
 	echo '------------------------------'
 
 done
@@ -156,9 +158,10 @@ if [ "$update_flag" -eq 1 ];then
 echo -e "\033[32mCOPY $md_file\033[0m"
 cp /tmp/$md_file "${manifest_dir}/"
 
+sleep 1
 cd $manifest_dir
-git commit -a -m "projects update $(date -R)"
-git push github master
+git commit -a -m "projects update $(date -R)" 2>&1 > /tmp/manifest.log
+git push github master 2>&1 >> /tmp/manifest.log
 
 #push update to github
 /bin/bash $dirname_path/checkupdate.sh up2github 2>&1 > /tmp/push.log
