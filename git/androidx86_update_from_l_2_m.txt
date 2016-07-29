@@ -1,0 +1,22 @@
+从lollipop-multiwindow升级到marshmallow版本
+从manifest.xml看，代码分为几部分:
+aosp
+
+
+
+从原始的android-x86开始做mirror
+repo init -u git://gitscm.sf.net/gitroot/android-x86/manifest -b marshmarllow-x86 --mirror
+repo init -u git://gitscm.sf.net/gitroot/android-x86/manifest -b marshmallow-x86 --mirror
+修改.repo/manifests/default.xml
+-           fetch="https://android.googlesource.com"
++           fetch="https://aosp.tuna.tsinghua.edu.cn"
+同步代码
+repo sync
+aosp的代码从tsinghua去取
+androidx86的代码从.repo/manifests.git/config url = git://gitscm.sf.net/gitroot/android-x86/manifest去取
+
+同步到本地之后需要修改为所有代码都从本地去取
+1.修改.repo/manifests/default.xml,remote属性中fetch换成本地url
+2.android本身是在一个主分支上逐渐升级而成的，所以只需要将aosp代码部分同步到最新，其中revision指向其中的一个tag
+3.
+
