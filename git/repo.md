@@ -7,7 +7,7 @@
 - 功能实现
 
 # 环境简介
-![image](https://github.com/openthos/system-analysis/blob/master/other/doc/git.svg)
+![image](https://github.com/openthos/system-analysis/blob/master/other/doc/git.svg)  
 将aosp的代码和android-x86的代码拉到本地创建本地mirror;  
 开发从本地mirror上拉取代码，上传代码  
 本地mirror每天将新入库的代码上传到github  
