@@ -7,7 +7,7 @@
 - 功能实现
 
 # 环境简介
-![image](https://github.com/openthos/system-analysis/blob/master/other/doc/git.svg)
+![image -](pix/../other/doc/git.svg)
 # 功能需求
 1.从sourcefourge上将android-x86下载到本地，做成本地mirror;
 2.将本地代码实时同步到github上，方便不在lab的人员能够获得最新的android源码
