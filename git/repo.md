@@ -22,8 +22,8 @@
 将multiwindow分支的代码升级到android-M版本；  
 # 功能实现
 创建本地mirror,创建新的开发分支  
-https://github.com/openthos/system-analysis/blob/master/other/doc/android-x86%E6%BA%90%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91%E7%9A%84%E9%83%A8%E7%BD%B2.doc
-将本地mirror上代码上传到github  
+https://github.com/openthos/system-analysis/blob/master/other/doc/android-x86%E6%BA%90%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91%E7%9A%84%E9%83%A8%E7%BD%B2.doc  
+将本地mirror上代码上传到github    
 https://github.com/openthos/system-analysis/blob/master/other/doc/android-x86%E6%BA%90%E4%BB%A3%E7%A0%81github%E6%89%98%E7%AE%A1%E9%83%A8%E7%BD%B2.doc
 
 
