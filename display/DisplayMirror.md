@@ -7,7 +7,16 @@
 - 设计实现
 
 ## 项目简介
-完善oto的display功能，支持多屏mirror,extend,net/wifi等方式的显示。
+完善oto的display功能，包括:  
+
+|描述|计划|完成|
+|---|---|---|
+|双屏mirror|Y|Y|
+|分辨率调整|8/1-8/31|N|
+|多屏extend|N||
+|net显示|N||
+|wifi显示|N||
+
 
 ###　当前开发人员 (20160801-20160831)
 王建兴 - oto支持双屏mirror模式的显示
