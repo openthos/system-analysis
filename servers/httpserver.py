@@ -2,6 +2,9 @@
 #coding=utf-8
 
 '''
+by chyyuu
+Last edit at 2016/08/04
+
 by Lerry  http://lerry.org
 Start from 2011/07/27 22:49:51
 Last edit at 2012/09/29
@@ -97,7 +100,7 @@ def get_handler(root_path):
                     self.close_connection = 1
                 elif value.lower() == 'keep-alive':
                     self.close_connection = 0
-
+	
         def copyfile(self, src_data, dst):
             shutil.copyfileobj(src_data, dst)
             #dst.write(src_data)
