@@ -1,0 +1,238 @@
+注意:
+1 mkbootfs is from
+./system/core/cpio/mkbootfs.c
+
+2 installer的目录 即initrd.img
+
+chyyuu@chyyuu-X599:~/develop/openthos/oto-related/oto-repo/out/target/product/x86_64/installer$ ls -R
+.:
+android  bin  hd  init  iso  lib  mnt  proc  sbin  scripts  sfs  sys  tmp
+
+./android:
+
+./bin:
+busybox  ld-linux.so.2  lndir
+
+./hd:
+
+./iso:
+
+./lib:
+ld-linux.so.2  libcrypt.so.1  libc.so.6  libdl.so.2  libm.so.6  libntfs-3g.so.31  libpthread.so.0  librt.so.1
+
+./mnt:
+
+./proc:
+
+./sbin:
+mount.ntfs-3g
+
+./scripts:
+00-ver  0-auto-detect  1-install  1-update  2-mount  3-tslib  4-dpi
+
+./sfs:
+
+./sys:
+
+./tmp: 
+
+
+3 out/host/linux-x86/bin/mkbootfs bootable/newinstaller/install/,即 install.img
+
+
+4 out/target/product/x86_64/system 目录,即 system.img
+
+
+
+# complete run info
+-----------------------------------------------------`
+build/tools/generate-notice-files.py  out/target/product/x86_64/obj/NOTICE.txt  out/target/product/x86_64/obj/NOTICE.html "Notices for files contained in the filesystem images in this directory:" out/target/product/x86_64/obj/NOTICE_FILES/src
+
+make_ext4fs -T -1 -S out/target/product/x86_64/root/file_contexts -l 1265M -a system out/target/product/x86_64/obj/PACKAGING/systemimage_intermediates/system.img out/target/product/x86_64/system
+
+mkuserimg.sh out/target/product/x86_64/system out/target/product/x86_64/obj/PACKAGING/systemimage_intermediates/system.img ext4 system 0 out/target/product/x86_64/root/file_contexts
+
+out/host/linux-x86/bin/acp -pr bootable/newinstaller/boot/ out/target/product/x86_64/boot
+
+rm -rf out/target/product/x86_64/installer
+out/host/linux-x86/bin/acp -pr bootable/newinstaller/initrd out/target/product/x86_64/installer
+ln -s /bin/ld-linux.so.2 out/target/product/x86_64/installer/lib
+
+mkdir -p out/target/product/x86_64/installer/android out/target/product/x86_64/installer/iso out/target/product/x86_64/installer/mnt out/target/product/x86_64/installer/proc out/target/product/x86_64/installer/sys out/target/product/x86_64/installer/tmp out/target/product/x86_64/installer/sfs out/target/product/x86_64/installer/hd
+
+echo "VER=2016-08-09" > out/target/product/x86_64/installer/scripts/00-ver
+
+out/host/linux-x86/bin/mkbootfs out/target/product/x86_64/installer | gzip -9 > out/target/product/x86_64/initrd.img
+out/host/linux-x86/bin/mkbootfs bootable/newinstaller/install/ | gzip -9 > out/target/product/x86_64/install.img
+
+
+genisoimage -vJURT -b isolinux/isolinux.bin -c isolinux/boot.cat \
+	-no-emul-boot -boot-load-size 4 -boot-info-table \
+	-input-charset utf-8 -V "Android-x86 LiveCD" -o out/target/product/x86_64/android_x86_64.iso out/target/product/x86_64/boot out/target/product/x86_64/ramdisk.img out/target/product/x86_64/initrd.img out/target/product/x86_64/install.img out/target/product/x86_64/system.sfs out/target/product/x86_64/kernel
+	
+
+# complete run and result info	
+-------------------------------------------------
+build/tools/generate-notice-files.py  out/target/product/x86_64/obj/NOTICE.txt  out/target/product/x86_64/obj/NOTICE.html "Notices for files contained in the filesystem images in this directory:" out/target/product/x86_64/obj/NOTICE_FILES/src
+Combining NOTICE files into HTML
+Combining NOTICE files into text
+Installed file list: out/target/product/x86_64/installed-files.txt
+Target system fs image: out/target/product/x86_64/obj/PACKAGING/systemimage_intermediates/system.img
+make_ext4fs -T -1 -S out/target/product/x86_64/root/file_contexts -l 1265M -a system out/target/product/x86_64/obj/PACKAGING/systemimage_intermediates/system.img out/target/product/x86_64/system
+Creating filesystem with parameters:
+    Size: 1326448640
+    Block size: 4096
+    Blocks per group: 32768
+    Inodes per group: 8096
+    Inode size: 256
+    Journal blocks: 5060
+    Label: 
+    Blocks: 323840
+    Block groups: 10
+    Reserved block group size: 79
+Created filesystem with 5508/80960 inodes and 288203/323840 blocks
+Running:  mkuserimg.sh out/target/product/x86_64/system out/target/product/x86_64/obj/PACKAGING/systemimage_intermediates/system.img ext4 system 0 out/target/product/x86_64/root/file_contexts
+Parallel mksquashfs: Using 8 processors
+Creating 4.0 filesystem on out/target/product/x86_64/system.sfs, block size 131072.
+[===========================================================-] 10120/10120 100%
+
+Exportable Squashfs 4.0 filesystem, gzip compressed, data block size 131072
+	compressed data, compressed metadata, compressed fragments, compressed xattrs
+	duplicates are removed
+Filesystem size 529704.48 Kbytes (517.29 Mbytes)
+	40.89% of uncompressed filesystem size (1295399.79 Kbytes)
+Inode table size 22585 bytes (22.06 Kbytes)
+	55.66% of uncompressed inode table size (40578 bytes)
+Directory table size 30 bytes (0.03 Kbytes)
+	93.75% of uncompressed directory table size (32 bytes)
+Number of duplicate files found 0
+Number of inodes 2
+Number of files 1
+Number of fragments 0
+Number of symbolic links  0
+Number of device nodes 0
+Number of fifo nodes 0
+Number of socket nodes 0
+Number of directories 1
+Number of ids (unique uids + gids) 1
+Number of uids 1
+	chyyuu (1000)
+Number of gids 1
+	chyyuu (1000)
+out/host/linux-x86/bin/acp -pr bootable/newinstaller/boot/ out/target/product/x86_64/boot
+Target ram disk: out/target/product/x86_64/ramdisk.img
+rm -rf out/target/product/x86_64/installer
+out/host/linux-x86/bin/acp -pr bootable/newinstaller/initrd out/target/product/x86_64/installer
+ln -s /bin/ld-linux.so.2 out/target/product/x86_64/installer/lib
+mkdir -p out/target/product/x86_64/installer/android out/target/product/x86_64/installer/iso out/target/product/x86_64/installer/mnt out/target/product/x86_64/installer/proc out/target/product/x86_64/installer/sys out/target/product/x86_64/installer/tmp out/target/product/x86_64/installer/sfs out/target/product/x86_64/installer/hd
+echo "VER=2016-08-09" > out/target/product/x86_64/installer/scripts/00-ver
+out/host/linux-x86/bin/mkbootfs out/target/product/x86_64/installer | gzip -9 > out/target/product/x86_64/initrd.img
+out/host/linux-x86/bin/mkbootfs bootable/newinstaller/install/ | gzip -9 > out/target/product/x86_64/install.img
+----- Making iso image ------
+genisoimage -vJURT -b isolinux/isolinux.bin -c isolinux/boot.cat \
+	-no-emul-boot -boot-load-size 4 -boot-info-table \
+	-input-charset utf-8 -V "Android-x86 LiveCD" -o out/target/product/x86_64/android_x86_64.iso out/target/product/x86_64/boot out/target/product/x86_64/ramdisk.img out/target/product/x86_64/initrd.img out/target/product/x86_64/install.img out/target/product/x86_64/system.sfs out/target/product/x86_64/kernel
+Warning: creating filesystem that does not conform to ISO-9660.
+genisoimage 1.1.11 (Linux)
+Scanning out/target/product/x86_64/boot
+Scanning out/target/product/x86_64/boot/efi
+Scanning out/target/product/x86_64/boot/efi/boot
+Scanning out/target/product/x86_64/boot/isolinux
+Writing:   Initial Padblock                        Start Block 0
+Done with: Initial Padblock                        Block(s)    16
+Writing:   Primary Volume Descriptor               Start Block 16
+Done with: Primary Volume Descriptor               Block(s)    1
+Writing:   Eltorito Volume Descriptor              Start Block 17
+Size of boot image is 4 sectors -> No emulation
+Done with: Eltorito Volume Descriptor              Block(s)    1
+Writing:   Joliet Volume Descriptor                Start Block 18
+Done with: Joliet Volume Descriptor                Block(s)    1
+Writing:   End Volume Descriptor                   Start Block 19
+Done with: End Volume Descriptor                   Block(s)    1
+Writing:   Version block                           Start Block 20
+Done with: Version block                           Block(s)    1
+Writing:   Path table                              Start Block 21
+Done with: Path table                              Block(s)    4
+Writing:   Joliet path table                       Start Block 25
+Done with: Joliet path table                       Block(s)    4
+Writing:   Directory tree                          Start Block 29
+Done with: Directory tree                          Block(s)    4
+Writing:   Joliet directory tree                   Start Block 33
+Done with: Joliet directory tree                   Block(s)    4
+Writing:   Directory tree cleanup                  Start Block 37
+Done with: Directory tree cleanup                  Block(s)    0
+Writing:   Extension record                        Start Block 37
+Done with: Extension record                        Block(s)    1
+Writing:   The File(s)                             Start Block 38
+  1.85% done, estimate finish Tue Aug  9 13:45:34 2016
+  3.70% done, estimate finish Tue Aug  9 13:45:34 2016
+  5.55% done, estimate finish Tue Aug  9 13:45:34 2016
+  7.40% done, estimate finish Tue Aug  9 13:45:34 2016
+  9.25% done, estimate finish Tue Aug  9 13:45:34 2016
+ 11.10% done, estimate finish Tue Aug  9 13:45:34 2016
+ 12.95% done, estimate finish Tue Aug  9 13:45:34 2016
+ 14.80% done, estimate finish Tue Aug  9 13:45:34 2016
+ 16.65% done, estimate finish Tue Aug  9 13:45:34 2016
+ 18.50% done, estimate finish Tue Aug  9 13:45:34 2016
+ 20.35% done, estimate finish Tue Aug  9 13:45:34 2016
+ 22.20% done, estimate finish Tue Aug  9 13:45:34 2016
+ 24.05% done, estimate finish Tue Aug  9 13:45:34 2016
+ 25.90% done, estimate finish Tue Aug  9 13:45:34 2016
+ 27.75% done, estimate finish Tue Aug  9 13:45:34 2016
+ 29.60% done, estimate finish Tue Aug  9 13:45:34 2016
+ 31.45% done, estimate finish Tue Aug  9 13:45:34 2016
+ 33.30% done, estimate finish Tue Aug  9 13:45:34 2016
+ 35.15% done, estimate finish Tue Aug  9 13:45:34 2016
+ 37.00% done, estimate finish Tue Aug  9 13:45:34 2016
+ 38.85% done, estimate finish Tue Aug  9 13:45:34 2016
+ 40.70% done, estimate finish Tue Aug  9 13:45:34 2016
+ 42.55% done, estimate finish Tue Aug  9 13:45:34 2016
+ 44.40% done, estimate finish Tue Aug  9 13:45:34 2016
+ 46.25% done, estimate finish Tue Aug  9 13:45:34 2016
+ 48.10% done, estimate finish Tue Aug  9 13:45:34 2016
+ 49.95% done, estimate finish Tue Aug  9 13:45:34 2016
+ 51.80% done, estimate finish Tue Aug  9 13:45:34 2016
+ 53.65% done, estimate finish Tue Aug  9 13:45:34 2016
+ 55.50% done, estimate finish Tue Aug  9 13:45:34 2016
+ 57.35% done, estimate finish Tue Aug  9 13:45:34 2016
+ 59.20% done, estimate finish Tue Aug  9 13:45:34 2016
+ 61.05% done, estimate finish Tue Aug  9 13:45:34 2016
+ 62.90% done, estimate finish Tue Aug  9 13:45:34 2016
+ 64.75% done, estimate finish Tue Aug  9 13:45:34 2016
+ 66.60% done, estimate finish Tue Aug  9 13:45:34 2016
+ 68.45% done, estimate finish Tue Aug  9 13:45:34 2016
+ 70.30% done, estimate finish Tue Aug  9 13:45:34 2016
+ 72.15% done, estimate finish Tue Aug  9 13:45:34 2016
+ 74.00% done, estimate finish Tue Aug  9 13:45:34 2016	
+ 75.85% done, estimate finish Tue Aug  9 13:45:34 2016
+ 77.70% done, estimate finish Tue Aug  9 13:45:34 2016
+ 79.55% done, estimate finish Tue Aug  9 13:45:34 2016
+ 81.40% done, estimate finish Tue Aug  9 13:45:34 2016
+ 83.25% done, estimate finish Tue Aug  9 13:45:34 2016
+ 85.09% done, estimate finish Tue Aug  9 13:45:34 2016
+ 86.95% done, estimate finish Tue Aug  9 13:45:34 2016
+ 88.79% done, estimate finish Tue Aug  9 13:45:34 2016
+ 90.65% done, estimate finish Tue Aug  9 13:45:34 2016
+ 92.49% done, estimate finish Tue Aug  9 13:45:34 2016
+ 94.35% done, estimate finish Tue Aug  9 13:45:34 2016
+ 96.19% done, estimate finish Tue Aug  9 13:45:34 2016
+ 98.05% done, estimate finish Tue Aug  9 13:45:34 2016
+ 99.89% done, estimate finish Tue Aug  9 13:45:34 2016
+Total translation table size: 5146
+Total rockridge attributes bytes: 2033
+Total directory bytes: 6144
+Path table size(bytes): 50
+Done with: The File(s)                             Block(s)    270102
+Writing:   Ending Padblock                         Start Block 270140
+Done with: Ending Padblock                         Block(s)    150
+Max brk space used 22000
+270290 extents written (527 MB)
+
+
+out/target/product/x86_64/android_x86_64.iso is built successfully.
+
+
+
+#### make completed successfully (03:16 (mm:ss)) ####
+
+
