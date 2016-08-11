@@ -29,3 +29,23 @@ https://github.com/openthos/system-analysis/blob/master/other/doc/android-x86%E6
 https://github.com/openthos/system-analysis/blob/master/git/create_mirror.md
 
 
+## mixed
+
+###  get  Android-x86 5.1 base 版本
+
+1. 初始化仓库, 并选择 Android-x86 5.1 base 版本:
+```
+repo init -u git://192.168.0.185/lollipop-x86/manifest.git -b lollipop-x86
+```
+
+如果提示无法连接到 gerrit.googlesource.com，可以编辑 ~/bin/repo，把 REPO_URL 一行替换成下面的：
+```
+REPO_URL = 'git://192.168.0.185/git-repo' 或清华大学的源：REPO_URL = 'https://gerrit-google.tuna.tsinghua.edu.cn/git-repo'
+```
+
+2. 同步源码树（以后只需执行这条命令来同步）：
+
+```
+repo sync
+```
+
