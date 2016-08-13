@@ -1,0 +1,138 @@
+20160812
+=============
+1 建立本地 和实验室git server的multiwin-english分支
+=============
+cd oto-repo
+repo start multiwin-english --all
+repo forall -c git push devorg multiwin-english:refs/heads/multiwin-english
+
+BUT get below errors:
+------------------------------
+To git://192.168.0.185/lollipop-x86/platform/packages/apps/OneTimeInitializer.git
+ * [new branch]      multiwin-english -> multiwin-english
+fatal: 'devorg' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+
+To git://192.168.0.185/lollipop-x86/platform/packages/apps/PhoneCommon.git
+ * [new branch]      multiwin-english -> multiwin-english
+fatal: 'devorg' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+
+
+
+
+
+这样本地添加mutliwin-english完成
+------------
+
+
+2 建立github远程分支
+====================
+
+2.1 修改OTO in github
+====
+cd /home/xly/local_repo/manifest
+git checkout github //这是对应的github上的OTO的multiwndow分支
+git checkout -b multiwin-english
+修改default.xml
+git add .
+git commit -m"update branch from multiwndow to multiwin-english"
+提交到github上
+git push github multiwin-english:refs/heads/mutliwin-english
+
+注: 写错了远程分支名,需要删除,重新生成
+git push --delete github mutliwin-english
+git push github multiwin-english:multiwin-english
+
+2.2 修改/home/checkupdate.sh 
+====
+在 git push github multiwindow后
+增加一句话
+git push github multiwin-english
+
+这样对 checkupdate.sh修改就结束了
+
+
+2.3 执行checkupdate.sh
+===
+在执行checkupdate.sh时出现两个错误
++ git push github multiwin-english
+error: src refspec multiwin-english does not match any.
+error: failed to push some refs to 'https://github.com/openthos/oto_packages_apps_OtoSettings'
++ '[' 1 -ne 0 ']'
++ echo -e '\033[31mPush  branch multiwin-english ERROR!\033[0m'
+
+
+
+注:
+在个人的本地repo中发现
+chyyuu@chyyuu-X599:~/develop/openthos/oto-related/oto-repo/packages/apps/Printer$ git branch -va
+* multiwin-english         29cc9ca packages: apps: Printer: Update two details.
+  remotes/aosp/multiwindow 29cc9ca packages: apps: Printer: Update two details.
+  remotes/m/multiwindow    -> aosp/multiwindow
+远地没有multiwin-english 
+执行
+git push aosp multiwin-english:multiwin-english
+Total 0 (delta 0), reused 0 (delta 0)
+To git://192.168.0.185/lollipop-x86/platform/packages/apps/Printer
+ * [new branch]      multiwin-english -> multiwin-english
+这样实验室git服务器上就有 multiwin-english分支了
+再到实验室git服务器上执行
+/opt/git/lollipop-x86/platform/packages/apps/Printer.git$ git branch -va
+* base                       4339072 Build: Use android-x86 5.1 v7-compat instead of the latest one
+  bugfix                     ddc396a Printer: Add one line code which is deleted erroneously.
+  feature                    ddc396a Printer: Add one line code which is deleted erroneously.
+  multiwin-english           29cc9ca packages: apps: Printer: Update two details.
+  multiwindow                29cc9ca packages: apps: Printer: Update two details.
+  multiwindow-l-bugfix       c7b618e packages: apps: Printer: Update two details.
+  remotes/github/base        4339072 Build: Use android-x86 5.1 v7-compat instead of the latest one
+  remotes/github/multiwindow 29cc9ca packages: apps: Printer: Update two details.
+可以看到multiwin-english分支了
+再执行
+git push github multiwin-english
+就在github上建立了multiwin-english分支了
+
+packages/apps/OtoSettings的情况类似,只是 aosp变成了x86
+
+
+3 本地测试github oto
+cd github-x86
+repo init -u https://github.com/openthos/OTO.git -b multiwin-english
+
+repo sync
+
+问题: 1 很多app没有成功
+原因是app的multiwin-english没有被放到github上,
+cd app
+for i in $(ls); do cd /..../$i ; git push multiwin-english ; done
+这样就在oto上建立好的app的multiwin-english的分支
+
+又出现有些git repo 
+Fetching projects:   2% (9/404)  Fetching project platform/external/parted
+fatal: read error: Connection reset by peer
+
+这是由于sf.net的git 无法访问导致的,
+一个临时的简单的方法是用本地的repo
+即修改manifest.xml
+
+cd github-x86
+cd .repo
+修改manifest.xml
+
+  <remote  name="x86"
+           fetch="git://gitscm.sf.net/gitroot/android-x86/" />
+           <!-- fetch="." -->
+
+为
+ <remote  name="x86"
+           fetch="git://192.168.0.185/lollipop-x86/" />
+
+这样就用本地的repo了.
+
+然后执行
+repo sync
+就可以取到 github上的代码了.
+
+
