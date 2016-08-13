@@ -1,0 +1,40 @@
+in out/target/product/x86_64/root下, 会形成ramdisk.img, 并系统启动后,mount到android中
+并执行其中的init程序,即位于/system/core/init
+
+$gzip -dc ramdisk.img|cpio -itmd
+charger
+data
+default.prop
+dev
+file_contexts
+fstab.android_x86_64
+init
+init.android_x86_64.rc
+init.bluetooth.rc
+init.environ.rc
+init.rc
+init.superuser.rc
+init.trace.rc
+init.usb.rc
+init.zygote32.rc
+init.zygote64_32.rc
+proc
+property_contexts
+sbin
+sbin/adbd
+sbin/healthd
+sbin/mkfs.f2fs
+sbin/modprobe
+sbin/ueventd
+sbin/v86d
+sbin/watchdogd
+seapp_contexts
+selinux_version
+sepolicy
+service_contexts
+sys
+system
+ueventd.android_x86_64.rc
+ueventd.rc
+5445 blocks
+
