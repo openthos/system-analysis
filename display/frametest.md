@@ -1,6 +1,6 @@
 帧率自动化测试:
 
-声明:gputrace-gen来自于https://github.com/faxiang1230/gputrace/blob/master/gputrace-gen  
+声明:gputrace-gen来自于https://github.com/olvaffe/gputrace
 
 前提：  
 远程连接到android-x86上  
