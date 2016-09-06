@@ -1,6 +1,10 @@
+帧率自动化测试:
 
-前提：
-远程连接到android-x86上
+声明:gputrace-gen来自于https://github.com/faxiang1230/gputrace/blob/master/gputrace-gen  
+
+前提：  
+远程连接到android-x86上  
+
 1.安装应用，复制播放的文件,复制脚本文件
 ```
 adb install vlc.apk
