@@ -1,0 +1,87 @@
+#!/bin/sh
+
+BASE="/sys/kernel/debug/tracing"
+
+CPU_TP="power:cpu_frequency
+	power:cpu_idle
+	sched:sched_wakeup
+	sched:sched_switch"
+
+DRM_TP="drm:drm_vblank_event"
+
+I915_TP="i915:i915_gem_ring_dispatch
+	 i915:i915_gem_request_add
+	 i915:i915_gem_request_complete
+	 i915:i915_gem_request_retire
+	 i915:i915_gem_request_wait_begin
+	 i915:i915_gem_request_wait_end
+	 i915:i915_gem_evict
+	 i915:i915_flip_request
+	 i915:i915_flip_complete
+	 i915:i915_ring_wait_begin
+	 i915:i915_ring_wait_end
+	 i915:intel_gpu_freq_change"
+
+ALL_TP="drm:drm_vblank_event i915:i915_flip_complete"
+
+if [ $# -lt 1 ]; then
+	echo "Usage: $0 <start|stop|dump|<seconds>>"
+	exit 1
+fi
+
+tp_clear() {
+	path="$BASE/trace"
+	echo > $path
+}
+
+tp_enable() {
+	path="$BASE/set_event"
+	echo "$ALL_TP" > $path
+}
+
+tp_disable() {
+	path="$BASE/set_event"
+	echo > $path
+}
+
+tp_dump() {
+	path="$BASE/trace"
+	cat $path
+}
+
+tp_pipe() {
+	path="$BASE/trace_pipe"
+	cat $path > $1 &
+	return $!
+}
+
+case "$1" in
+	start)
+		tp_disable
+		tp_clear
+		tp_enable
+		;;
+	stop)
+		tp_disable
+		;;
+	dump)
+		tp_dump
+		;;
+	*)
+		sleep 1
+
+		# start
+		tp_disable
+		tp_clear
+		tp_enable
+
+		tp_pipe $1
+		pipe_pid=$?
+
+		# wait & stop
+		sleep 5
+		tp_disable
+
+		sleep 1
+		kill $pipe_pid
+esac
