@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/bin/sh
 
 BASE="/sys/kernel/debug/tracing"
 
@@ -22,7 +22,7 @@ I915_TP="i915:i915_gem_ring_dispatch
 	 i915:i915_ring_wait_end
 	 i915:intel_gpu_freq_change"
 
-ALL_TP="drm:drm_vblank_event i915:i915_flip_complete"
+ALL_TP="drm:drm_vblank_event"
 
 if [ $# -lt 1 ]; then
 	echo "Usage: $0 <start|stop|dump|<seconds>>"

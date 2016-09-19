@@ -39,4 +39,3 @@ echo $frame
 **CTS is responsible for install VLC.apk,push test.mp4,gputrace-gen,frametest.sh to the specific position,**
 ```
 ./frametest.sh > result       if 'result' is digital,result should be OK
-```

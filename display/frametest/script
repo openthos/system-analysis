@@ -1,0 +1,8 @@
+./data/gputrace/gputrace-gen start
+sleep 150
+./data/gputrace/gputrace-gen stop
+./data/gputrace/gputrace-gen dump > /data/gputrace/gputrace.log
+
+kill `ps|grep vlc|awk '{print $2;}'`
+
+exit
