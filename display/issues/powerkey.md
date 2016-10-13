@@ -14,4 +14,5 @@ svc power stayon true
 svc power stayon false  
 界面可以正常操作;  
 可以考虑在显示屏亮之后加上如上操作,调用函数入口地址:  
+frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java:onScreenOn
 frameworks/base/cmds/svc/src/com/android/commands/svc/PowerCommand.java
