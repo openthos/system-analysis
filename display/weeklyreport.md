@@ -10,3 +10,5 @@ https://github.com/openthos/system-analysis/blob/master/display/issues/powerkey.
 5.第一次启动慢问题调查  
 https://github.com/openthos/system-analysis/blob/master/display/issues/SystemSetupSlow.md  
 6.某些u盘多次插拔之后不能识别问题调查  
+7. 解决System分区变化后预安装第三方APP不能启动的问题，已经解决
+8. 研究OpenThos Evaluation USB制作方法及工具的开发，方法已经明确。
