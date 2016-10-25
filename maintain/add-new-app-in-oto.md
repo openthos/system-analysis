@@ -1,6 +1,6 @@
 ## detail process
 ```
-// add bare git repo
+// add bare git repo in oto git repos
 cd /opt/git/lollipop-x86/platform/packages/apps/
 sudo git init --bare OtoFileManager.git
 sudo chown -R gitdaemon.nogroup OtoFileManager.git/
