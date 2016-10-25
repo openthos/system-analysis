@@ -1,3 +1,4 @@
+# add new app git repo in oto
 ## detail process
 ```
 # server
