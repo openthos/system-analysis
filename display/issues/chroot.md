@@ -3,8 +3,11 @@
 socket(PF_INET, SOCK_RAW, IPPROTO_ICMP) = 3  
 socket(PF_INET, SOCK_DGRAM, IPPROTO_IP) = -1 EACCES (Permission denied)  
 那么就是访问SOCK_DGRAM时有问题,没有权限  
+```
 system/core/include/private/android_filesystem_config.h  
 #define AID_NET_RAW       3004  /* can create raw INET sockets */  
+    { "net_raw",       AID_NET_RAW, },  
+```
 那么在/etc/group中加入如下:  
 net_raw:x:3004:root  
 root有权限访问编号位3004组  
