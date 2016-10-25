@@ -1,0 +1,55 @@
+## chroot 到ubuntu 根文件系统配置和修改记录
+
+ 1. 首先安装ubuntu， 然后安装openthos到硬盘不同两个分区（以下假设sda1为android-x86, sda2为ubuntu）
+   > _此时安装完android-x86后，无法引导进入ubuntu，需要重新安装grub，并修改ubuntu下的grub.cfg来使系统可以直接进入ubuntu，但是此处不修改后面无影响。_
+
+ 2. 进入openthos,并启动终端，将ubuntu盘符挂载到一个自己目录下  
+    `mkdir /storage/emulated/legal/ubuntu`  
+    `mount -t ext4 /dev/block/sda2 /storage/emulated/legacy/ubuntu`
+
+ 3. 更改PATH，挂在文件系统  
+     `PATH export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH`  
+     `mount -t sysfs sysfs /storage/emulated/legacy/ubuntu/sys`  
+     `mount -t proc proc /storage/emulated/legacy/ubuntu/proc`  
+     `mount -t devpts devpts /storage/emulated/legacy/ubuntu/dev/pts  //此处可能非必要`
+ 4. chroot到ubuntu的根  
+     `chroot /storage/emulated/legacy/ubuntu/ su -`  
+
+ 5. 修改ubuntu下必要配置 //配置一次，增加android 下socket相关组（3003 3004）， 并将其加入root组权限  ，修改dns配置文件  
+     `groupadd -g 3003 socket_AF_INT`  
+     `groupadd -g 3004 socket_raw`  
+     `user add -a -G socket_AF_INT,socket_raw root`  
+     `su -`&#160;// 此时可以ping通其它ip  
+     `vi /etc/resolv.conf` //增加如下一行， 另外DNS可由openthos终端内 `getprop | grep eth0`查看
+    > nameserver 192.168.0.1  
+
+至此， 可以在终端内 apt-get update 等安装和使用基本ubuntu的命令了，另外为了不太丑、好用点可以再增加部分如下配置：  
+1. 修改/etc/profile, 末尾增加如下内容
+> set -o vi  
+> alias vi=vim  
+> export TERM=xterm  
+> stty cols 210  
+> export LINES=75  
+> shopt -u checkwinsize
+
+
+2. 增加swap分区 //本地编译时内存不足  
+      `dd if=/dev/zero of=/opt/swap.img bs=1m count=8000`  
+      `mkswap /opt/swapfile`  
+      `swapon /opt/swapfile`  
+      `swapon -s` // 查看下swap状态
+
+另外，如果想尝试在本地编译openthos，可以尝试以下步骤，但是目前我编译还未通过，且肯定还有部分包未安装，可留在下面作为记录：（编译时台式机经常出现无故关机和无故终端消失的情况）。  
+chroot到ubuntu下后：
+1. 下载repo文件
+    `curl https://storage.googleapis.com/git-repo-downloads/repo > ~/repo`  
+    修改repo文件， 将google的地址REPO_URL改为：`git：//192.168.0.186:/git-repo`  
+    `chmod +x ~/repo`  
+    `cp ~/repo /usr/bin`  
+2. 安装必要包、工具和配置 (缺少一些包，待补充)  
+    openjdk7此处如果为ubunt16.04 或16.10需在网上下载（1.7版本jdk已被移除，并且目前编译androidx86需要1.7版本。  
+    `sudo apt-get install git openjdk7-jdk g++-multilib zlib1g-dev lib32z1-dev bison flex gperf `  
+    `git config --global user.email "email@xxx.com" `  
+    `git config --global user.name "name" `  
+    `repo init -u git://192.168.0.185/lollipop-x86/manifest -b multiwindow`  
+    `repo sync`
