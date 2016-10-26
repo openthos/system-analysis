@@ -26,7 +26,7 @@ mount -t $type $disk $CHMOUNT
 mount -t proc proc $CHMOUNT/proc
 mount -t sysfs sysfs $CHMOUNT/sys
 mount -t devpts devpts $CHMOUNT/dev/pts
-if [ "`grep net_raw /data/ubuntu/etc/group`" ];then
+if [ ! "`grep net_raw /data/ubuntu/etc/group`" ];then
 	echo "inet:x:3003:root" >> $CHMOUNT/etc/group
 	echo "net_raw:x:3004:root" >> $CHMOUNT/etc/group
 fi
