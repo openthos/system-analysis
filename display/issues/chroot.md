@@ -29,6 +29,7 @@ mount -t devpts devpts $CHMOUNT/dev/pts
 if [ ! "`grep net_raw /data/ubuntu/etc/group`" ];then
 	echo "inet:x:3003:root" >> $CHMOUNT/etc/group
 	echo "net_raw:x:3004:root" >> $CHMOUNT/etc/group
+	echo "nameserver 192.168.0.1" /etc/resolv.conf
 fi
 chroot $CHMOUNT su
 export PATH=/usr/bin/:/usr/sbin/:/bin/:/sbin/:$PATH
