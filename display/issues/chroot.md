@@ -5,7 +5,7 @@
 set -x
 CHMOUNT=/data/ubuntu
 TESTMOUNT=/data/mount
-CHTMP=tmp.txt
+CHTMP=/data/tmp.txt
 if [ ! -d $CHMOUNT ];then
 	mkdir $CHMOUNT
 fi
