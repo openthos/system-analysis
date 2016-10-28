@@ -13,3 +13,9 @@
 对于不依赖android studio的开发来说已经可以正常开发;  
 - 11.修复U盘挂载失败问题;  
 部分的U盘不能挂载是一个必然现象,而对于APP开发来说来带了很大困扰:不能正常拷贝东西,需要手动mount等操作;
+
+# Next Plan
+王建兴  
+- 1.新版kernel的稳定性测试
+fetch 4.4.x版本最新的补丁,打入openthos的kernel,测试稳定性
+fetch 最新版本的kernel,打入openthos,测试稳定性
