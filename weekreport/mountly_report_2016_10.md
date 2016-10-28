@@ -16,6 +16,6 @@
 
 # Next Plan
 王建兴  
-- 1.新版kernel的稳定性测试
-fetch 4.4.x版本最新的补丁,打入openthos的kernel,测试稳定性
+- 1.新版kernel的稳定性测试  
+fetch 4.4.x版本最新的补丁,打入openthos的kernel,测试稳定性  
 fetch 最新版本的kernel,打入openthos,测试稳定性
