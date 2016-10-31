@@ -9,6 +9,7 @@
 
 ## 项目简介
 确保OTO系统的性能稳定和性能提高。
+支持Linux应用在OTO中运行。
 支持x86硬件上oto & android-x86的kernel，确保系统在硬件上正常工作。
 确保与kernel稳定版保持同步。争取使用kernel-4.8+
 
