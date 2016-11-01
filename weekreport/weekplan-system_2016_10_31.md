@@ -5,7 +5,8 @@ porting最新版kernel到OTO上,并验证测试稳定性
 系统经常性休眠问题分析  
 dump功能调查  
 ### 陈威
-OpenThos体验版本安装程序，解决diskpart不能将U盘分成两个以上分区的问题
+OpenThos体验版本安装程序，解决diskpart不能将U盘分成两个以上分区的问题  
+Xposed调研,初步能够运行
 ###韩辉
 系统工具sysdig的安装使用  
 系统工具ebpf安装使用  
