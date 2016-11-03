@@ -20,7 +20,7 @@ git push
 git clone git://192.168.0.185/lollipop-x86/platform/xxxx
 git checkout -b multiwindow
 touch Android.mk //for example
-git add .;git commit;git push URL HEAD:refs/heads/multiwindow
+git add .;git commit;git push origin multiwindow
 // go to TOP dir of OTO, get new manifest (default.xml), then re-sync
 repo init -u git://192.168.0.185/lollipop-x86/manifest -b multiwindow
 repo sync
