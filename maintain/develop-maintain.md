@@ -35,3 +35,23 @@ oto的系统开发与维护支持。
 
 ## 设计实现
 实时维护，定期升级
+
+
+## 常见问题和解决方法
+
+### 发现git pull or git clone 很慢
+把ipv6给关闭了
+比如
+```
+ifconfig eth0 del 33ffe:3240:800:1005::2/64
+
+cat /proc/sys/net/ipv6/conf/all/disable_ipv6
+显示0说明ipv6开启，1说明关闭
+
+root@box.com:~# sysctl net.ipv6.conf.all.disable_ipv6
+net.ipv6.conf.all.disable_ipv6 = 1
+root@box.com:~# sysctl net.ipv6.conf.default.disable_ipv6
+net.ipv6.conf.default.disable_ipv6 = 1
+root@box.com:~# sysctl net.ipv6.conf.lo.disable_ipv6
+net.ipv6.conf.lo.disable_ipv6 = 1
+```
