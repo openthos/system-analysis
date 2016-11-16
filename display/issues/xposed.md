@@ -1,10 +1,10 @@
-1.download AOSP source
+# 1.download AOSP source
 First download the latest source from Tsinghua TUNA.
 Then Update from Google(You can visti goole)
 ```
 repo init -u https://android.googlesource.com/platform/manifest -b android-5.1.1_r24
 ```
-2.Compile AOSP
+# 2.Compile AOSP
 HOST:Ubuntu 16.04
 ```
 sudo apt-get install git-core gnupg flex bison gperf build-essential \
@@ -26,4 +26,19 @@ index 0241cb6..77547b7 100644
 +  -B$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG)/x86_64-linux/bin \
    -no-integrated-as
 ```
-  
+# 3.Compose Xposed
+ - 1.download all repo in https://github.com/rovo89
+ - 2.read XposedTools/README.md
+ ```
+ configure XposedTolls/build.conf
+ javadir=XposdedBridge_dir
+ ./build.pl -a java(error)
+ I use android studio to compile the jar:download SDK API23 and fix build error.
+ ```
+ ./build.pl -t x86:22
+ 
+ # repo sync Error
+ ```
+ error: RPC failed; curl 56 GnuTLS recv error (-54): Error in the pull function.
+ git config --global http.postBuffer 1048576000
+ ```
