@@ -33,16 +33,50 @@ index 0241cb6..77547b7 100644
 ```
 1.copy 'Xposed' to AOSP 'frameworks/base/cmds/xposed'
 2.copy 'android_art' to AOSP 'art'
+3.Download XposedBridge.jar and copy to AOSP/out/java
+https://www.androidfilehost.com/?w=file-thanks&fid=95916177934548528&mid=97&download_id=hm44v2qm72glg7pmioq0lborm4&tid=1479362933&hc=f8be8adcbff7a2be42517ca2096e90e0127fe2468da9f2f7a6fc5a473e685658
 Compile is OK.
 ```
 # 4.Compile
  ```
+
  configure XposedTolls/build.conf
  javadir=XposdedBridge_dir
  ./build.pl -a java(error)
  I use android studio to compile the jar:download SDK API23 and fix build error.
  ```
  ./build.pl -t x86:22
+ ```
+ linux@linux-THTF-T-Series:~/aosp/XposedTools$ ./build.pl -t x86:22
+Loading config file /home/linux/aosp/XposedTools/build.conf...
+Checking requirements...
+Expanding targets from 'x86:22'...
+  SDK 22, platform x86
+
+Processing SDK 22, platform x86...
+Compiling...
+Executing: cd /home/linux/aosp/aosp && . build/envsetup.sh >/dev/null && lunch aosp_x86-eng >/dev/null && make -j4 TARGET_CPU_SMP=true xposed libxposed_art libart libart-compiler libart-disassembler libsigchain dex2oat oatdump patchoat
+Log: /home/linux/aosp/aosp/out/sdk22/x86/logs/build_20161117_135435.log
+                                                                                
+Build was successful!
+
+Collecting compiled files...
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/bin/app_process32_xposed => /home/linux/aosp/aosp/out/sdk22/x86/files/system/bin/app_process32_xposed
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/lib/libxposed_art.so => /home/linux/aosp/aosp/out/sdk22/x86/files/system/lib/libxposed_art.so
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/lib/libart.so => /home/linux/aosp/aosp/out/sdk22/x86/files/system/lib/libart.so
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/lib/libart-compiler.so => /home/linux/aosp/aosp/out/sdk22/x86/files/system/lib/libart-compiler.so
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/lib/libart-disassembler.so => /home/linux/aosp/aosp/out/sdk22/x86/files/system/lib/libart-disassembler.so
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/lib/libsigchain.so => /home/linux/aosp/aosp/out/sdk22/x86/files/system/lib/libsigchain.so
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/bin/dex2oat => /home/linux/aosp/aosp/out/sdk22/x86/files/system/bin/dex2oat
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/bin/oatdump => /home/linux/aosp/aosp/out/sdk22/x86/files/system/bin/oatdump
+/home/linux/aosp/aosp/out/target/product/generic_x86/system/bin/patchoat => /home/linux/aosp/aosp/out/sdk22/x86/files/system/bin/patchoat
+Creating xposed.prop file...
+/home/linux/aosp/aosp/out/sdk22/x86/files/system/xposed.prop
+Creating flashable ZIP file...
+/home/linux/aosp/aosp/out/sdk22/x86/xposed-v65-sdk22-x86-test.zip
+
+Done!
+ ```
  
  # repo sync Error
  ```
