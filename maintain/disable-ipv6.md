@@ -1,3 +1,5 @@
+#ubuntu
+
 in /etc/sysctl.conf, add
 ```
 net.ipv6.conf.all.disable_ipv6 = 1
