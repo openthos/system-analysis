@@ -33,6 +33,7 @@ index 0241cb6..77547b7 100644
 ```
 1.copy 'Xposed' to AOSP 'frameworks/base/cmds/xposed'
 2.copy 'android_art' to AOSP 'art'
+git checkout -b lollipop 
 3.Download XposedBridge.jar and copy to AOSP/out/java
 https://www.androidfilehost.com/?w=file-thanks&fid=95916177934548528&mid=97&download_id=hm44v2qm72glg7pmioq0lborm4&tid=1479362933&hc=f8be8adcbff7a2be42517ca2096e90e0127fe2468da9f2f7a6fc5a473e685658
 Compile is OK.
