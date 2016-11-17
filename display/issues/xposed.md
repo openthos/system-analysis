@@ -29,6 +29,13 @@ index 0241cb6..77547b7 100644
 # 3.Compose Xposed
  - 1.download all repo in https://github.com/rovo89
  - 2.read XposedTools/README.md
+ - 3.compile Xposed and android_art with AOSP
+```
+1.copy 'Xposed' to AOSP 'frameworks/base/cmds/xposed'
+2.copy 'android_art' to AOSP 'art'
+Compile is OK.
+```
+# 4.Compile
  ```
  configure XposedTolls/build.conf
  javadir=XposdedBridge_dir
