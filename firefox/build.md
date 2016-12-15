@@ -1,5 +1,5 @@
 ## 官方wiki
-官方wiki写的很详细,请仔细看.
+官方wiki写的很详细,请仔细看.  
 https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/Simple_Firefox_for_Android_build
 ## 预装工具: 
 ```
