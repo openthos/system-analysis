@@ -1,4 +1,5 @@
 #System weeklyreport
+## 王建兴
 ## 1.修复bug:
 版本管理问题bug,  
 unrar集成,  
