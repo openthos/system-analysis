@@ -214,3 +214,9 @@ https://dev.openthos.org
 ```
 # 剩余任务
 drupal和seahub共用一个密码
+# issue
+##出现上传和下载失败的情况,请修改配置文件:
+```conf
+conf/seahub_settings.py
+FILE_SERVER_ROOT                    = 'https://dev.openthos.org/seafhttp'
+```
