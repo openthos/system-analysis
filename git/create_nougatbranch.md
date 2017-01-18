@@ -40,3 +40,10 @@ chown gitdaemon:nogroup 仓库.git
 ```
 repo init -u git://192.168.0.185/composition/android-x86/manifes -b nougat-x86
 ```
+问题:
+```
+git clone git://192.168.0.185/composition/android-x86/platform/hardware/libhardware -b nougat-x86
+Cloning into 'libhardware'...
+fatal: Remote branch nougat-x86 not found in upstream origin
+```
+没有找到这个分支,检查分支中...
