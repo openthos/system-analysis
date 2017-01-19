@@ -2,7 +2,7 @@
 ## Openthos分支:
 android-x86 lollipop multiwindow分支(<font color=green>正在开发中的分支</font>):  
 ```
-repo init -u git://192.168.0.185/composition/android-x86/manifest.git -b multiwindow
+repo init -u git://192.168.0.185/lollipop-86/manifest -b multiwindow
 ```
 android-x86 lollipop base分支:
 ```
@@ -12,6 +12,15 @@ android-x86 marshmallow base分支:
 ```
 repo init -u git://192.168.0.185/composition/android-x86/manifest.git -b marshmallow-x86
 ```
+android-x86 nougat-x86 base分支
+```
+repo init -u git://192.168.0.185/composition/android-x86/manifest -b nougat-x86-2 --config
+在docker中编译时会报错:
+out/host/linux-x86/bin/jack-admin: line 27: USER: unbound variable build/core
+fix方法:
+export USER=$(whoami)
+```
+
 ## kernel:
 kernel基本上都附有openthos和android-x86的部分patch(关于驱动的,可以不用关心)
 ```
