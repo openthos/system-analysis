@@ -20,7 +20,11 @@ out/host/linux-x86/bin/jack-admin: line 27: USER: unbound variable build/core
 fix方法:
 export USER=$(whoami)
 ```
-
+20170213黄志伟帮助openthos升级到android_5.1.1_r38
+```
+升级前下载方式：
+repo init -u git://192.168.0.185/lollipop-x86/manifest -b refs/tags/openthos_20170213
+```
 ## kernel:
 kernel基本上都附有openthos和android-x86的部分patch(关于驱动的,可以不用关心)
 ```
