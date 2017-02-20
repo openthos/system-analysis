@@ -22,7 +22,7 @@ PC的突然重启(刘明明的T45睡眠唤醒后重启问题)
 ## 系统组技能提高
 ### Android Debug
 logcat使用[总结]  
-dumpsys使用[总结]  
+dumpsys使用[https://source.android.com/devices/tech/debug/asan.html]  
 ### 其他技能提升
 kernel的掌握  
 Android HAL层　
