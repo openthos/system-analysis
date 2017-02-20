@@ -7,8 +7,8 @@ window上的parted工具，和陈威一起改进openthos的U盘版
 ### 王建兴
 部分应用在U盘版上运行问题:VLC,微信，网易云  
 **已发邮件，等待回复**  
-比较seafile社区版和专业版的差别  
-**目前来看还没有看到和我们seafile服务突然停止相关的feature在pro版中出现**
+比较seafile社区版和专业版的差别  
+**目前来看还没有看到和我们seafile服务突然停止相关的feature在pro版中出现**  
 ### 待分配任务
 关于给网外暴露端口且搭建gerrit问题,以此来解决同步问题  
 seafile服务频繁重启问题解决    
