@@ -15,8 +15,9 @@ seafile服务频繁重启问题解决
 ## 已完成的任务  
 ### 陈威:
 ### 肖络元
->window上的parted工具，和陈威一起改进openthos的U盘版
-parted工具移植到windows难度较大，不适合
+>window上的parted工具，和陈威一起改进openthos的U盘版  
+parted工具移植到windows难度较大，不适合  
+
 ### 王建兴
 >部分应用在U盘版上运行问题:VLC,微信，网易云    
 已经解决  
