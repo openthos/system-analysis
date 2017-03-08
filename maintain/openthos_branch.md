@@ -1,5 +1,9 @@
 # Openthos源码中branch简介
 ## Openthos分支:
+openthos publish branch(将许多应用禁止掉以防止用户点击):
+```
+repo init -u git://192.168.0.185/lollipop-x86/manifest -b publish
+```
 android-x86 lollipop multiwindow分支(<font color=green>正在开发中的分支</font>):  
 ```
 repo init -u git://192.168.0.185/lollipop-86/manifest -b multiwindow
