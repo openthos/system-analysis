@@ -1,0 +1,155 @@
+diff --git a/lib/lib.h b/lib/lib.h
+index 798f182..24e2f72 100644
+--- a/lib/lib.h
++++ b/lib/lib.h
+@@ -113,7 +113,7 @@ void xexec(char **argv);
+ pid_t xpopen_both(char **argv, int *pipes);
+ int xwaitpid(pid_t pid);
+ int xpclose_both(pid_t pid, int *pipes);
+-pid_t xpopen(char **argv, int *pipe, int stdout);
++pid_t xpopen(char **argv, int *pipe, int fstdout);
+ pid_t xpclose(pid_t pid, int pipe);
+ int xrun(char **argv);
+ int xpspawn(char **argv, int*pipes);
+diff --git a/lib/xwrap.c b/lib/xwrap.c
+index 36a601c..2883c84 100644
+--- a/lib/xwrap.c
++++ b/lib/xwrap.c
+@@ -281,14 +281,14 @@ int xpclose_both(pid_t pid, int *pipes)
+ }
+ 
+ // Wrapper to xpopen with a pipe for just one of stdin/stdout
+-pid_t xpopen(char **argv, int *pipe, int stdout)
++pid_t xpopen(char **argv, int *pipe, int fstdout)
+ {
+   int pipes[2], pid;
+ 
+-  pipes[!stdout] = -1;
+-  pipes[!!stdout] = 0;
++  pipes[!fstdout] = -1;
++  pipes[!!fstdout] = 0;
+   pid = xpopen_both(argv, pipes);
+-  *pipe = pid ? pipes[!!stdout] : -1;
++  *pipe = pid ? pipes[!!fstdout] : -1;
+ 
+   return pid;
+ }
+diff --git a/toys/android/getprop.c b/toys/android/getprop.c
+index 9675d9f..c64721f 100644
+--- a/toys/android/getprop.c
++++ b/toys/android/getprop.c
+@@ -72,7 +72,7 @@ void getprop_main(void)
+ 
+     cb.func_log = selinux_log_callback_local;
+     selinux_set_callback(SELINUX_CB_LOG, cb);
+-    TT.handle = selinux_android_prop_context_handle();
++    TT.handle = selinux_android_prop_context_handle_2();
+     if (!TT.handle) error_exit("unable to get selinux property context handle");
+   }
+ 
+diff --git a/toys/pending/netstat.c b/toys/pending/netstat.c
+index 9803ca0..78d96a3 100644
+--- a/toys/pending/netstat.c
++++ b/toys/pending/netstat.c
+@@ -31,7 +31,9 @@ config NETSTAT
+ #include "toys.h"
+ 
+ #include <net/route.h>
+-
++#define RTF_DEFAULT	0x00010000	/* default - learned via ND	*/
++#define RTF_ADDRCONF	0x00040000	/* addrconf route - RA		*/
++#define RTF_CACHE	0x01000000	/* cache entry			*/
+ GLOBALS(
+   char current_name[21];
+   int some_process_unidentified;
+diff --git a/toys/pending/route.c b/toys/pending/route.c
+index 0126dc9..0760ea3 100644
+--- a/toys/pending/route.c
++++ b/toys/pending/route.c
+@@ -24,6 +24,7 @@ config ROUTE
+ #define FOR_route
+ #include "toys.h"
+ #include <net/route.h>
++#include <linux/ipv6_route.h>
+ 
+ GLOBALS(
+   char *family;
+diff --git a/toys/posix/cp.c b/toys/posix/cp.c
+index d8ae783..bc71a4c 100644
+--- a/toys/posix/cp.c
++++ b/toys/posix/cp.c
+@@ -107,7 +107,7 @@ GLOBALS(
+     } c;
+   };
+ 
+-  char *destname;
++  char *desttatame;
+   struct stat top;
+   int (*callback)(struct dirtree *try);
+   uid_t uid;
+@@ -322,7 +322,7 @@ int cp_node(struct dirtree *try)
+ 
+     // timestamp
+     if (TT.pflags & _CP_timestamps) {
+-      struct timespec times[] = {try->st.st_atim, try->st.st_mtim};
++      struct timespec times[] = {try->st.st_atime, try->st.st_mtime};
+ 
+       if (fdout == AT_FDCWD) utimensat(cfd, catch, times, AT_SYMLINK_NOFOLLOW);
+       else futimens(fdout, times);
+diff --git a/toys/posix/date.c b/toys/posix/date.c
+index ca0ca53..86243ea 100644
+--- a/toys/posix/date.c
++++ b/toys/posix/date.c
+@@ -185,7 +185,7 @@ void date_main(void)
+       struct stat st;
+ 
+       xstat(TT.file, &st);
+-      now = st.st_mtim.tv_sec;
++      now = st.st_mtime_nsec;
+     } else now = time(0);
+ 
+     ((toys.optflags & FLAG_u) ? gmtime_r : localtime_r)(&now, &tm);
+diff --git a/toys/posix/find.c b/toys/posix/find.c
+index 3b27225..f6da6d0 100644
+--- a/toys/posix/find.c
++++ b/toys/posix/find.c
+@@ -404,7 +404,8 @@ static int do_find(struct dirtree *new)
+               struct stat st;
+ 
+               xstat(ss[1], &st);
+-              udl->u.tm = st.st_mtim;
++              udl->u.tm.tv_nsec = st.st_mtime_nsec;
++              udl->u.tm.tv_sec = st.st_mtime;
+             }
+           }
+         } else {
+@@ -413,9 +414,9 @@ static int do_find(struct dirtree *new)
+             if (*s == 'u') test = new->st.st_uid == udl->u.uid;
+             else if (*s == 'g') test = new->st.st_gid == udl->u.gid;
+             else {
+-              test = new->st.st_mtim.tv_sec > udl->u.tm.tv_sec;
+-              if (new->st.st_mtim.tv_sec == udl->u.tm.tv_sec)
+-                test = new->st.st_mtim.tv_nsec > udl->u.tm.tv_nsec;
++              test = new->st.st_mtime > udl->u.tm.tv_sec;
++              if (new->st.st_mtime == udl->u.tm.tv_sec)
++                test = new->st.st_mtime_nsec > udl->u.tm.tv_nsec;
+             }
+           }
+         }
+diff --git a/toys/posix/touch.c b/toys/posix/touch.c
+index 22a1e2e..b922ce8 100644
+--- a/toys/posix/touch.c
++++ b/toys/posix/touch.c
+@@ -107,8 +107,10 @@ void touch_main(void)
+     struct stat st;
+ 
+     xstat(TT.file, &st);
+-    ts[0] = st.st_atim;
+-    ts[1] = st.st_mtim;
++    ts[0].tv_sec = st.st_atime;
++    ts[0].tv_nsec = st.st_atime_nsec;
++    ts[1].tv_sec = st.st_mtime;
++    ts[1].tv_nsec = st.st_mtime_nsec;
+   }
+ 
+   // Which time(s) should we actually change?

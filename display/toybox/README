@@ -1,0 +1,12 @@
+# Porting toybox to OPENTHOS
+# Why we need toybox
+https://lwn.net/Articles/629362/
+# Download toybox
+git clone https://github.com/CyanogenMod/android_external_toybox.git -b cm-13.0
+mv android_external_toybox.git external/toybox
+# patch 
+toybox:toybox.patch
+bionic:bionic.patch
+libselinux:libselinux.patch
+
+Maybe you can have a try(I don't fix error).

@@ -1,0 +1,51 @@
+diff --git a/include/selinux/android.h b/include/selinux/android.h
+index 00894f5..e4fa19c 100644
+--- a/include/selinux/android.h
++++ b/include/selinux/android.h
+@@ -12,7 +12,7 @@ extern "C" {
+ #endif
+ 
+ extern struct selabel_handle* selinux_android_file_context_handle(void);
+-
++extern struct selabel_handle* selinux_android_prop_context_handle_2(void);
+ extern struct selabel_handle* selinux_android_service_context_handle(void);
+ 
+ extern void selinux_android_set_sehandle(const struct selabel_handle *hndl);
+diff --git a/src/android.c b/src/android.c
+index 6eeefec..81badd9 100644
+--- a/src/android.c
++++ b/src/android.c
+@@ -48,7 +48,11 @@ static const char *const sepolicy_file[] = {
+ 	"/sepolicy",
+ 	"/data/security/current/sepolicy",
+ 	NULL };
+-
++static const struct selinux_opt seopts_prop[] = {
++        { SELABEL_OPT_PATH, "/property_contexts" },
++        { SELABEL_OPT_PATH, "/data/security/current/property_contexts" },
++        { 0, NULL }
++};
+ static const struct selinux_opt seopts_service[] = {
+     { SELABEL_OPT_PATH, "/service_contexts" },
+     { SELABEL_OPT_PATH, "/data/security/current/service_contexts" },
+@@ -1324,7 +1328,19 @@ void selinux_android_set_sehandle(const struct selabel_handle *hndl)
+ {
+     sehandle = (struct selabel_handle *) hndl;
+ }
+-
++struct selabel_handle* selinux_android_prop_context_handle_2(void)
++{
++    int policy_index = selinux_android_use_data_policy() ? 1 : 0;
++    struct selabel_handle* sehandle = selabel_open(SELABEL_CTX_ANDROID_PROP,
++                                                   &seopts_prop[policy_index], 1);
++    if (!sehandle) {
++        selinux_log(SELINUX_ERROR,"SELinux:  Could not load property_contexts:  %s\n",
++              strerror(errno));
++        return NULL;
++    }
++    selinux_log(SELINUX_INFO,"SELinux: Loaded property contexts from %s\n", seopts_prop[policy_index].value);
++    return sehandle;
++}
+ static int selinux_android_load_policy_helper(bool reload)
+ {
+ 	int fd = -1, rc;
