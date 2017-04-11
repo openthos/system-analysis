@@ -4,13 +4,14 @@
 1.trustboot  
 2.GUI SLIENT BOOT(进度80%)
 ### 肖络元
-1.follow黄志伟关于硬解码的提交,能够出一份文档
-2.在dev.openthos.org上试行gerrit服务
+1.follow黄志伟关于硬解码的提交,能够出一份文档  
+2.在dev.openthos.org上试行gerrit服务  
 3.协助王之旭进行automount的任务  
-### 王建兴    
+4.实验室内部和github代码同步  
+### 王建兴    
 1.openthos代码库整理
 2.电源管理（sleep/wakeup）  
-3.3.29的ROM运行速度变慢问题
+3.3.29的ROM运行速度变慢问题  
 ### 待分配任务
 1.系统部署工具（win->HDD）  
 2.磁盘分区方案  
