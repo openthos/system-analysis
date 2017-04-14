@@ -1,17 +1,21 @@
 # System组任务记录
-## 任务分配<2017/03/22>:
+## 任务分配<2017/04/14>:
 ### 陈威:
-1.trustboot  
-2.GUI SLIENT BOOT(进度80%)
+1.trustboot  /需要加快进度    
+2.GUI SLIENT BOOT(进度80%)  
+3.OverLay
 ### 肖络元
-1.follow黄志伟关于硬解码的提交,能够出一份文档  
+1.follow黄志伟关于硬解码的提交,能够出一份文档   
 2.在dev.openthos.org上试行gerrit服务  
 3.协助王之旭进行automount的任务  
 4.实验室内部和github代码同步  
 ### 王建兴    
-1.openthos代码库整理
+1.openthos代码库整理  
 2.电源管理（sleep/wakeup）  
 3.3.29的ROM运行速度变慢问题  
+4.OPENTHOS在虚拟机上运行问题  
+一是鼠標不見了。二是 resolution 過大(好像變成 2560x1600?)。  
+
 ### 待分配任务
 1.系统部署工具（win->HDD）  
 2.磁盘分区方案  
