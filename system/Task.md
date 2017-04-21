@@ -8,13 +8,11 @@
 1.follow黄志伟关于硬解码的提交,能够出一份文档   
 2.在dev.openthos.org上试行gerrit服务  
 3.协助王之旭进行automount的任务  
-4.实验室内部和github代码同步  
+
 ### 王建兴    
 1.openthos代码库整理  
 2.电源管理（sleep/wakeup）  
-3.3.29的ROM运行速度变慢问题  
-4.OPENTHOS在虚拟机上运行问题  
-一是鼠標不見了。二是 resolution 過大(好像變成 2560x1600?)。  
+3.3.29的ROM运行速度变慢问题   
 
 ### 待分配任务
 1.系统部署工具（win->HDD）  
@@ -31,8 +29,11 @@
 parted工具移植到windows难度较大，不适合  
 >live启动中添加data分区来保存用户数据
 >Marshmallow-x86上vold到lollipop-x86上的移植调研
-已经基本解决,有待进一步深入使用
+已经基本解决,有待进一步深入使用  
+>实验室内部和github代码同步  
 ### 王建兴
+>OPENTHOS在虚拟机上运行问题  
+一是鼠標不見了。二是 resolution 過大(好像變成 2560x1600?)。  
 >部分应用在U盘版上运行问题:VLC,微信，网易云    
 已经解决  
 >seafile服务频繁重启问题解决  
