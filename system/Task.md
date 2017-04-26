@@ -5,12 +5,12 @@
 2.GUI SLIENT BOOT(进度80%)  
 3.OverLay
 ### 肖络元
-1.系统部署工具（win->HDD）  
-更加清晰地定义需求场景-->找刘总  25/5之前搞清楚  
-recovery应用的现状-->薛海龙  26/5之前搞清楚  
+1.系统部署工具（win recovery工具）  
+更加清晰地定义需求场景-->找刘总 5.25之前搞清楚  
+recovery应用的现状-->薛海龙  5.25之前搞清楚  
 如果需要APP大量修改-->请王之旭帮忙  
 2.follow黄志伟关于硬解码的提交,能够出一份文档   
-3.在dev.openthos.org上试行gerrit服务    
+- (优先级较低)在dev.openthos.org上试行gerrit服务    
 
 ### 王建兴    
 1.openthos代码库整理  
