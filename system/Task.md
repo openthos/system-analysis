@@ -13,7 +13,7 @@ recovery应用的现状-->薛海龙  4.26之前搞清楚
 
 ### 王建兴    
 1.openthos代码库整理  
-2.电源管理（sleep/wakeup）
+2.电源管理（sleep/wakeup）  
 3.3.29的ROM运行速度变慢问题   
 
 ### 待分配任务
