@@ -2,8 +2,7 @@
 ## 任务分配<2017/04/21>:
 ### 陈威:
 1.trustboot  /需要加快进度    
-2.GUI SLIENT BOOT(进度80%)  
-3.OverLay
+2.OverLay
 ### 肖络元
 1.系统部署工具（win recovery工具）  
 更加清晰地定义需求场景-->找刘总 4.25之前搞清楚  
@@ -14,9 +13,9 @@ recovery应用的现状-->薛海龙  4.26之前搞清楚
 
 ### 王建兴    
 1.openthos代码库整理  
-2.电源管理（sleep/wakeup）  
+2.电源管理（sleep/wakeup）
 3.3.29的ROM运行速度变慢问题   
-4.磁盘分区方案  
+
 ### 待分配任务
 
 关于给网外暴露端口且搭建gerrit问题,以此来解决同步问题  
@@ -25,6 +24,7 @@ recovery应用的现状-->薛海龙  4.26之前搞清楚
 ## 已完成的任务  
 ### 陈威:
 >Ｕ盘安装的优化　
+>GUI SLIENT BOOT
 ### 肖络元
 >window上的parted工具，和陈威一起改进openthos的U盘版  
 parted工具移植到windows难度较大，不适合  
@@ -47,3 +47,5 @@ parted工具移植到windows难度较大，不适合
 >refind和grub2的选择问题
 >**已发邮件，等待回复**  
 选择refind来引导,存在secure boot的问题
+>磁盘分区方案  
+>GUI SLIENT BOOT
