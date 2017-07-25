@@ -8,6 +8,7 @@ adb connect $IP
 adb install test.apk
 ```
 then you can get its pakcage name under `/data/app/`,the Directory is pakcage name.
+
 **Sometimes Android change `org.openthos.test` to `org.openthos.test-1`,please ignore its `-number`.**
 
 ### 2.Get it via apktool
