@@ -1,6 +1,7 @@
 # How to Add a new install app
 **If you have app source,please upload it other than upload `apk` file.**
 ## 1.Get the apk's package name
+First you need to get package name,you can choose both methods.
 ### 1.1 Get it after Installtion
 For Example:
 ```
