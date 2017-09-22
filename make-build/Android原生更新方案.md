@@ -1,4 +1,4 @@
-# <center> Android原生更新方案 </center>
+# <center> Android原生更新方案分析 </center>
 整理：三寸丁 （chanuei@sina.com）  
 https://github.com/openthos/system-analysis/blob/master/make-build/AOSP%E4%B8%AD%E7%9A%84OTA%E5%8D%87%E7%BA%A7.md  
 一文中我们找到了AOSP中本身包含有OTA更新的相关内容，本文对OTA的更新进行深入的挖掘。  
