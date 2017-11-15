@@ -1,5 +1,5 @@
 # <center> Android ADB常用命令说明 </center>
-
+作者： 三寸丁（陈威 chanuei@sina.com)
 
 ## <center> 序言 </center>
 　　自从Google推出Android Studio之后，我们平常在开发APP的过程中，代码的编写、程序的编译、
