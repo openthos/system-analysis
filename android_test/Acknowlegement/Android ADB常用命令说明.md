@@ -33,7 +33,7 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　如果你调试过Linux本机程序，你一定知道GDB的存在。GDB也就是GNU Debugger, 是由GNU的调试工具，通过它你可以采取包含设置断点在内的一系列措施来调试你的Linux桌面程序。  
 　　而对于Android来说，由于整个系统都不在PC上运行，因此GDB根本就够不着它，再加上其Java与C/++有着本质的区别，即便GDB够着它，也基本上没什么用。  
 　　因此Android需要一套新工具来实现类似GDB的功能，这套工具就是ADB，当然你不简单地说它是Android Debugger。因为它的调试控制端是运行的PC上的，而执行端是在设备上的。其整体结构如下图所示。
-        <div><center>![ADB概念图](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adbandroid-debug-bridge-how-it-works-8-728.jpg "width:400")</center>
+        <div><center>![ADB概念图](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adbandroid-debug-bridge-how-it-works-8-728.jpg "width:400")</center>  
   　严格意义上来说整个工具由三部分组成：  
   　1. 运行在设备或是Emulator中的adbd  
   　2. 运行在PC上的ADB服务，由adb.exe首次运行时创建。通过connect命令连接上设备或Emulator中运行的adbd后创建。（adb.exe为在Windows下的程序文件名称，Linux或Mac版程序文件名就为adb）  
