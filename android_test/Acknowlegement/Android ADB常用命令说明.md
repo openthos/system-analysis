@@ -33,7 +33,7 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　如果你调试过Linux本机程序，你一定知道GDB的存在。GDB也就是GNU Debugger, 是由GNU的调试工具，通过它你可以采取包含设置断点在内的一系列措施来调试你的Linux桌面程序。  
 　　而对于Android来说，由于整个系统都不在PC上运行，因此GDB根本就够不着它，再加上其Java与C/++有着本质的区别，即便GDB够着它，也基本上没什么用。  
 　　因此Android需要一套新工具来实现类似GDB的功能，这套工具就是ADB，当然你不简单地说它是Android Debugger。因为它的调试控制端是运行的PC上的，而执行端是在设备上的。其整体结构如下图所示。
-        <div><center>![ADB概念图](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadbandroid-debug-bridge-how-it-works-8-728.jpg "width:400")</center>
+        <div><center>![ADB概念图](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adbandroid-debug-bridge-how-it-works-8-728.jpg "width:400")</center>
   　严格意义上来说整个工具由三部分组成：  
   　1. 运行在设备或是Emulator中的adbd  
   　2. 运行在PC上的ADB服务，由adb.exe首次运行时创建。通过connect命令连接上设备或Emulator中运行的adbd后创建。（adb.exe为在Windows下的程序文件名称，Linux或Mac版程序文件名就为adb）  
@@ -124,42 +124,42 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 ## 三、与日常调试/自动化测试关联度高的指令实例讲解
 ### 3.1 adb devices —— 枚举设备
 　　adb devices的指令，就是为我们列出目前adb服务已经连接的设备有哪些。只要在命令行中执行“adb devices”即可，其执行结果如下图所示。
-        <div><center>![adb_devices](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_without_anything.PNG)</center>  
+        <div><center>![adb_devices](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_without_anything.PNG)</center>  
 　　本次执行，列出的设备列表为空，原因很简单，我们目前尚未连接任何设备也未启动Emulator，因此这里是不可能显示出任何设备的。
 　　现在让我们启动一个Emulator如下图所示，怎么创建并启动Emulator不在本文讨论范围。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGemulator.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/emulator.PNG)</center>  
 　　我们再执行一次“adb devices”，看一下输出。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_with_emulator.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_with_emulator.PNG)</center>  
 　　现在我们将一部Android手机打开USB调试模式后通过USB连接到运行adb程序的PC上，然后再次运行“adb devices”，我们将得到如下图的输出。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_with_emulator_and_phone.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_with_emulator_and_phone.PNG)</center>  
 　　从上面几个示例中我们可以看出，“adb device”的输出信息有两列，分别是设备序列号、设备状态。设备状态可能是offline，unauthorized或device。  
 　　对于Emulator通常不会出现offline及unauthorized这两个状态，要么显示为device，要么干脆不在列表里出现。  
 　　最有可能出现offline的是通过USB及TCP协议连接的设备，比如一个已经连接的手机，你未将USB连接断开就直接重启，就会出现offline的状态。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_offline.PNG)</center>  
-　　而unauthorized通常出现在设备已经开启adb调试功能，并连接到adb服务所在的PC，但是尚未对该PC进行授权以允许该PC对设备进行调试，即下图中的确定还未点击。   <div><center>![](images/adb_devices_with_unauthorized_device.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_offline.PNG)</center>  
+　　而unauthorized通常出现在设备已经开启adb调试功能，并连接到adb服务所在的PC，但是尚未对该PC进行授权以允许该PC对设备进行调试，即下图中的确定还未点击。   <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_with_unauthorized_device.png)</center>  
 　　对于手机等设备来说，出现offline状态后，你只需重新拔插一下USB线缆，ADB服务与设备之间就可以重新进入到device状态。  
 　　有时候我们希望获得更为详细的设备信息，只需要在指令后面加上“-l”参数即可。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_with_param_l.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_with_param_l.PNG)</center>  
 　　与不带“-l”参数相比，后面多出来了“产品|型号|平台”等相关信息。  
 ### 3.2 adb install —— 安装APP  
 　　“攻城狮”也好，“程序猿”也罢，在调试或测试APP过程中都免不了需要将程序安装到设备中去。在日常使用手机过程中，我们安装APP通常都是通过手机内置的应用商店直接安装。偶有时候也会通过电脑下载来某个APP的apk文件，然后将这个apk文件通过电脑复制到手机的所谓内存中去，再在手机的文件管理器中点击该apk文件根据提示进行相关安装操作，再或者通过诸如豌豆荚、腾讯手机助手等相关软件来协助安装。  
 　　但这些方法，总是有那么一点太不“攻城狮”了，太不“程序猿”了。对于“攻城狮”、“程序猿”们来说：能在PC上操作的就决不用在设备上操作，能用键盘搞的就尽量少动鼠标。因此上面那些安装方法，虽说可行，但都不太理想。而“adb install”就是比较“攻城狮”、比较“程序猿”的安装方法。  
 　　在安装之前，我们先看一下Emulator上没有除自带APP之外未安装其他应用之前的情况。如下图就是API 27 Emulator的默认APP列表。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGapplications_before_adb_install.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/applications_before_adb_install.PNG)</center>  
 　　现在我使用adb install来在Emulator上安装通过Android Studio生成的最简单的APP MyApplication.apk。安装的命令是：  
         <table><tr><td bgcolor=black><font color=white>　　> adb install MyApplication.apk　　　　　　　</td></tr></table>
 　　可是我们得到的结果是一顿抱怨，而不是成功的喜悦。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_install_failed_for_more_than_one_devices.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_install_failed_for_more_than_one_devices.PNG)</center>  
 　　这是什么鬼？“error: more than one device/emulator”。  
 　　让我们好好的想一想，前面我们开了一Emulator，还在这台PC上连接了一个开启了USB调试功能的手机。那好吧，确实不是adb的错，也不是“adb install”语法不对，确实是我们现在adb服务上已经连接上了两个设备：一个Emulator，以及一个手机。虽然我们知道我们想给Emulator安装APP，而adb.exe虽然智能，但并不人工智能。  
 　　既然，默认方法不好使，我们还是踏踏实实地明确的使用“-s”参数告诉adb我们想访问的是哪一个设备。指定设备的方法即为“-s”参数后接设备序列号，对于本案的Emulator，其序列号为“emulator-5554”，因此给Emulator安装APP的命令如下：  
         <table><tr><td bgcolor=black><font color=white>　　> adb -s emulator-5554 install MyApplication.apk　　　　　　　</td></tr></table>
 　　这一次安装反馈如下图所示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_install_app_for_emu_success.PNG)</center>
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_install_app_for_emu_success.PNG)</center>
 　　那我们再来看一下Emulator的APP列表。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGapplications_after_adb_install.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/applications_after_adb_install.PNG)</center>  
 　　如果同名APP已经存在，我们还试图往设备上安装APP，我们将得到如下的错误提示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_install_failed_for_app_exists.PNG)</center>    
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_install_failed_for_app_exists.PNG)</center>    
 　　这时候你可以选择卸载APP，然后再重新安装，卸载的方法，稍候再讲。而实际开发调试过程中“攻城狮”“程序猿”们在调试APP时，有时候往往需要保留APP的数据，这就意味着不能选择先卸载再安装这条路，也就意味着我们必须学会覆盖式安装。还好google设计adb时已经给我们留好了这样的一条路。就是以参数来执行安装指令。本例中覆盖式安装MyApplication的命令如下：  
         <table><tr><td bgcolor=black><font color=white>　　> adb -s emulator-5554 install -r MyApplication.apk　　　　　　　</td></tr></table>
 　　一次性安装多个APP的指令如下：  
@@ -170,9 +170,9 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　与安装APP一样，卸载APP其实也有很多种方法。但主要的方法其实也就是下面这几种：  
 #### 3.3.1 设备上常规删除方法  
 　　原生Android Oreo设备上，按住APP图标不放，待屏幕上出现“App info”气泡（当语言设为中文时为“应用信息”）时，向上方拖动APP图标。  
-　　    <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGapp_info.PNG)</center>  
+　　    <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/app_info.PNG)</center>  
 　　此时界面上方出现一个注名为“Uninstall”的垃圾筒图标(中文环境下为卸载)，如下图所示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGapp_uninstall_occurs.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/app_uninstall_occurs.PNG)</center>  
 　　继续向止拖动APP图标，到那垃圾筒上。然后，然后APP就没有了。就是那么神奇，有木有？  
 　　非原生设备，其实也差不多，大体也都是从按住APP图标不放，...  
 #### 3.3.2 通过工具卸载  
@@ -192,13 +192,13 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　我个人的一个设备，其通过wifi连接后分配到的IP是192.168.1.11，那么此时我只要像下面这样连接他即可。  
         <table><tr><td bgcolor=black><font color=white>　　> adb connect 192.168.1.11　　　　　　</td></tr></table>
 　　在我的PC上，该命令的执行结果如下：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_connect.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_connect.png)</center>  
 　　此时通过“adb devices”指令显示的信息如下  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_unauthorized.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_unauthorized.png)</center>  
 　　WHAT？ “unauthorized”，好吧确实是unauthorized。其实这也没什么好奇怪的，毕竟这是第一次连接这个设备，如果是个人都能通过TCP/IP的方式ADB到你的手机、平板、电视，那这个世界得多可怕，而这样的事情，当是也是Google是所不希望发生的。虽然我让你连上了，但是在我批准之前，我是处于所谓unauthorized状态的。那么，我们要如何批准呢！这时拿起我们的设备，对本次实验来是，这是一台装有lineage os的Android手机，此时的手机屏幕显示如下。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGlinaro_with_unauthorized_tcpip.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/linaro_with_unauthorized_tcpip.png)</center>  
 　　屏上内容即是询问要否批准本次ADB设计，当然标题“Allow USB debugging?”是不太对的，这应该是Lineage OS小小的疏漏。没关系，我们点击确定就好，然后再用“adb devices”指令看一下。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_devices_authorized.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_devices_authorized.png)</center>  
 　　现在我的这台机器的ADB Server上共挂上了三台设备，分别是：通过192.168.1.11这个IP连接的一台手机，一台通过USB连接的手机，以及一个Emulator。  
 　　当然，有时候某上设备上的adbd daemon程序可能不一定设定在默认端口5555上。则此时我们需要以IP:PORT这样的形式来对该设备做“adb connect”。 如，假设为5559端口，则命令如下：
         <table><tr><td bgcolor=black><font color=white>　　> adb connect 192.168.1.11:5559　　　　　　</td></tr></table>
@@ -213,7 +213,7 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　假设我们有个文件abc.txt要发送到Emulator的/storage/emulated/0文件夹下，则我们的指令应该是：  
         <table><tr><td bgcolor=black><font color=white>　　> adb -s emulator-5554 push abc.txt /storage/emulated/0　　　　　　</td></tr></table>
 　　其实我们通常也只能往设备的/storage/emulated/0或是其下级文件夹乃至更下级文件夹中发送文件。下面我们试着为Emulator的/data文件夹下发送abc.txt，看看会发生什么。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_push_without_permission.png)</center>
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_push_without_permission.png)</center>
 　　很显然，我们的企图没有得逞，主要是因为为了Android设置了较为严格的安全策略，普通权限的指令只允许访问有限的存储空间。而对大部分设备来说，这个空间就是/storage/emulated/0或是其简短路径/sdcard。  
 　　另外，我们也可以整个文件夹向设备发送，只需要将push指令的第一个参数从文件变更为文件夹的路径即可。如我们要发送文件夹ADirectory，则完整的指令应该是：
         <table><tr><td bgcolor=black><font color=white>　　> adb -s emulator-5554 push ADirectory /storage/emulated/0　　　　　　</td></tr></table>
@@ -223,13 +223,13 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　假设，我们需要评估的程序会在/storage/emulated/0/MyApplication/testResult.dat中保存相关数据，则我们取回该数据的指令调用如下：  
         <table><tr><td bgcolor=black><font color=white>　　> adb -s emulator-5554 pull /storage/emulated/0/MyApplication/testResult.dat ./　　　　　　</td></tr></table>
 　　其实不论是发送文件到设备中，还是从设备中取出文件，都还可以通过Device File Explorer来进行。Device File Explorer是Android Studio中的一个小工具。可以通过菜单 “View | ToolWindows | Device File Explorer”来打开。  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGdevice_file_explorer.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/device_file_explorer.png)</center>  
 ### 3.7 adb sync —— 同步设备  
 　　通常对做应用开发的“程序猿”及单个应用测试的“攻城狮”而言，“adb sync”是一条不大可能用到的指令，因为“adb sync”的作用比较特殊，它的作用是将整个系统中诸如/system、/oem、/vendor及/data分区与主机对应目录不一致的内容同步到设备上。  
 　　虽说对应用开发的“程序猿”及单个应用测试的“攻城狮”而言，“adb sync”作用不大，但由其作用可以看到，adb sync指令对系统测试“攻城狮”而言是一个意义重大的指令。其可以帮助我们跳过一系列繁琐的过程，直接将系统同步到最新生成的系统版本，如我们有一套基于Android 8.1开发的系统HIPPOS 2017.a0.00，我们测试过程中发现了Android 8.1一系列的BUG，我们对其修正后，编译生成了新的2017.a0.10。那么我们就可以非常方便的通过“adb sync”指令将所有的测试设备由HIPPOS 2017.a0.00同步成最新版本的HIPPOS 2017.a0.10。  
 　　“adb sync”指令在使用前需要系统中存在环境变量ANDROID_PRODUCT_OUT。  
 　　如果系统中没有设置相应的环境变量，则我们将会得到一个“Product directory not specified”的提示，如下图所示。（注：从这里开始，除非特别需要，我们的系统都只接一个设备，来完成本文后续所需要用到的每一个测试，因此命令adb后面不会再跟着-s参数指出要访问的是哪一个设备。）  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_sync_without_product_out.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_sync_without_product_out.png)</center>  
 　　若我们只是偶尔同步一回系统，我可以通过-p参数来指定之前编译系统所生成的system、data等文件夹父文件夹。如在我当前的Linux主机上的，HIPPOS的OUT文件夹的路径为~/aosp/out/target/product/hippos，则临时性同步HIPPOS到设备的指令为：  
         <table><tr><td bgcolor=black><font color=white>　　$ adb sync -p  ~/aosp/out/target/product/hippos ./　　　　　　</td></tr></table>
 　　若是我们需要频繁做相关的测试，建议还是设备环境变量ANDROID_PRODUCT_OUT。  
@@ -247,11 +247,11 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 
 **「交互式执行」**  
 　　交互式执行，即以不带参数的形式运行adb shell指令，打开一个交互式的shell环境，然后像使用本地Linux终端一样来输入并执行相关的命令。其运行的效果，如下图所示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_shell_interactive.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_shell_interactive.png)</center>  
 　　运行完毕要退出交互式shell环境，输入并执行命令“exit”即可。  
 **「直接执行」**  
 　　直接执行，即不打开交互式终端，由adb shell指令后面跟上要执行的指令及其参数组成。格式为“adb shell [COMMAND] [PARAMETER]”，如下图所示:  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_shell_noninteractive.png)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_shell_noninteractive.png)</center>  
 　　值得注意的是，参数中需要转义的字符在交互式shell中只需要一次转义，而在直接执行过程中需要两次转义才行。  
 　　下面讲述一些与Android调试及测试密切相关的shell命令，其他的泛泛的linux命令，不在本文档的论述范围之内。  
 #### 3.8.1 dumpsys  
@@ -259,11 +259,11 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　要知道设备上当前有哪些服务是可以进行dumpsys的,可以以“-l”选项,不加参数的方式运行dumpsys命令：  
         <table><tr><td bgcolor=black><font color=white>　　$ adb shell dumpsys -l 　　　  　</td></tr></table>
 　　执行“adb shell dumpsys -l”，将列出当前统上的全部可dumpsys的服务。其输出如下图所示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGdumpsys_-l.png)</center>
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/dumpsys_-l.png)</center>
 　　下面以获取电池信息为例，讲述一下，获取电池信息的dumpsys命令如下：  
         <table><tr><td bgcolor=black><font color=white>　　> adb shell dumpsys battery　　　　　　</td></tr></table>
 　　其输出信息如下：  
-      　 <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGdumpsys_battery.png)</center>  
+      　 <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/dumpsys_battery.png)</center>  
 　　关于dumpsys其他服务的细节内容，就不在本文里一一讲述。  
 #### 3.8.2 logcat  
 　　adb shell logcat，以及adb logcat 均是提供查看设备的日志功能，用法也一样，只不过一个是直接通过shell来调用，一个是直接通过adb 接口来访问。关于logcat的使用细节，请参考“万境绝尘”在CSDN上的博客[《adb logcat 命令行用法》 http://www.hanshuliang.com/?post=32](http://www.hanshuliang.com/?post=32)  
@@ -273,15 +273,20 @@ ADB的臆测，我还是要说你是“一本正经地胡说八道”。
 　　对于电视而言，随时可以老板说，我们新发现了一个遥控器供应商，产品又便宜，手感又好。那么我恭喜你，测试“攻城狮”！你需要将新的遥控器的每一个按键的码测试下来提供给研发的“程序猿”。  
 　　你可能地觉得奇怪，就算是电视需要查码，可是又关Android-X86什么事，这个不是用来设计在PC上运行的吗？又不需要使用遥控器？！说实话，一开始我也是这么想的。但总有些厂商的个别设计人员不按套路出牌，除了26字母及数字以外，很多诸如多媒体键、亮度音量控制键，总是设计得那么与众不同，即使在Windows上运行也需要加载自家的驱动才能正常工作。更有甚者连电源按键出来的码都很特别，你甚至都不用Android-X86都能看出它是多么的白里透红。  
 　　举个栗子，某想的思考板T420，Ubuntu的系统被设计为按一下电源按键，会弹出如下的提示：  
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGUbuntu_Power_Pressed.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/Ubuntu_Power_Pressed.PNG)</center>  
 　　可想而知，如果BOSS让你搞定这个按键，而你又没有get到getevent技能，会是多么的糟心。  
 　　而有了getevent这个强力工具，一切变得非常简单，开启getevent命令，按下电源键，坐等终端里报出相关按键的evdev信息。如下图所示：    
-        <div><center>![](https://github.com/chanuei/chanuei.github.io/raw/master/blogs/application_testing/android/ADB/images/Emulator.PNGadb_shell_getevent.PNG)</center>  
+        <div><center>![](https://raw.githubusercontent.com/chanuei/chanuei.github.io/master/blogs/application_testing/android/ADB/images/adb_shell_getevent.PNG)</center>  
 　　有了这一波神操作，立马键码原形显露无疑。上图是以Android模拟器为例按下电源键后得到的event设备上的按键码信息，键码为0074。  
 　　不过需要注意的是，getevent操作最好在交互式adb shell中使用，直接执行是，由于某些神密因素的影响，多多少少会有些问题！另外当需要结束event信息的获取，需要按下Ctrl+C组合键。
 #### 3.8.4 input  
 
 
+
+
+
+#### 3.8.5 pm
+#### 3.8.6 am
 $ adb push D:\Android\Projects\android-testing-master\ui\uiautomator\BasicSample\app\build\outputs\apk\debug\app-debug.apk /data/local/tmp/com.example.android.testing.uiautomator.BasicSample
 $ adb shell pm install -t -r "/data/local/tmp/com.example.android.testing.uiautomator.BasicSample"
 Success
@@ -314,11 +319,6 @@ $ adb shell am instrument -w -r   -e debug false -e class com.example.android.te
 Client not ready yet..
 Started running tests
 Tests ran to completion.
-
-
-#### 3.8.5 pm
-#### 3.8.6 am
-
 ### 3.9 adb backup  
 ### 4.0 adb restore  
 ### 4.1 adb get-state  
