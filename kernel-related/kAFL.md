@@ -1,5 +1,5 @@
-#[kAFL](https://github.com/RUB-SysSec/kAFL.git)
-##下载并安装依赖
+# [kAFL](https://github.com/RUB-SysSec/kAFL.git)
+## 下载并安装依赖
 ```
 git clone https://github.com/RUB-SysSec/kAFL.git
 cd kAFL
@@ -16,7 +16,7 @@ Intel(R) Core(TM) i5-6500
 Intel(R) Core(TM) i7-6700HQ 
 ...
 ```
-##配置guest虚拟机
+## 配置guest虚拟机
 - 手动创建一个qcow2的QEMU虚拟机系统镜像linux.qcow2，例如安装Ubuntu16.04
 - 创建QEMU虚拟机的Overlay
 ```
@@ -49,7 +49,7 @@ sudo ./loader
 savevm kafl
 q 
 ```
-##配置kAFL组件
+## 配置kAFL组件
 1. 编辑kAFL/kAFL-Fuzzer/kafl.ini，配置qemu-kafl_location为编译生成的qemu-system-x86_64位置。
 2. 编译agents，执行kAFL-Fuzzer/agents/compile.sh
 3. 取回已载入驱动的地址范围，用于fuzzing时的-ip0参数
@@ -58,9 +58,9 @@ cd /path/to/kAFL/kAFL-Fuzzer
 python kafl_info.py /path/to/snapshot/ram.qcow2 /path/to/snapshot/ agents/linux_x86_64/info/info 3000 -v
 ```
 
-##开始Fuzzing
+## 开始Fuzzing
 ```
 python kafl_fuzz.py /path/to/snapshot/ram.qcow2 /path/to/snapshot agents/linux_x86_64/fuzzer/kafl_vuln_test 3000 /path/to/input/directory /path/to/working/directory -ip0 0xffffffffc0287000-0xffffffffc028b000 -v --Purge
 ```
-##Paper
+## Paper
 https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/schumilo
