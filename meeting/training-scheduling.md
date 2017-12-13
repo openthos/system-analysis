@@ -16,6 +16,12 @@
   - Kernel building
   - ninja / kati / blueprint / soong
 
+* Kernel porting
+  - Policy
+  - android/common tree
+  - Drivers patches
+  - Mauro's tree
+
 * Android-x86 Booting
   - initrd.img
   - init
@@ -37,6 +43,11 @@
   - mesa
   - libdrm
   - GPUs support status
+    - Intel (i915 / i965)
+    - AMD (radeon / amdgpu)
+    - Nvidia (nouveau)
+    - Vmware (vmwgfx)
+    - Qemu (virgl)
   - uvesafb / v86d
   - Software renderer: llvmpipe / SwiftShader
   - Issues: RGBA_8888, YV12
@@ -134,6 +145,7 @@
   - Superuser
   - Firmware
   - Settings
+  - Add prebuilt apps
   - Lights HAL
 
 内容比较广，可以建议黄sir以此为线索分享一下自己发现问题、分析问题并解决问题的经验和方法，供团队学习。Graphic部分是对用户体验和系统性能影响最大的部分，也是涉及模块最多的部分，建议能够投入两天以上的时间。
