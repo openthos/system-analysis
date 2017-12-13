@@ -144,6 +144,7 @@
 * Miscellaneous
   - Superuser
   - Firmware
+  - Google analytics
   - Settings
   - Add prebuilt apps
   - Lights HAL
