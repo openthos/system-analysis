@@ -1,3 +1,6 @@
+# <center> 编译带Xposed框架的multiwindow </>
+陈威（三寸丁）    2018/04/22  
+chanuei@sina.com  
 # 一、如何编译带Xposed框架的multiwindow
   ssh登录180服务器，有如下目录
   1. /mnt/SSD/Xposed目录
