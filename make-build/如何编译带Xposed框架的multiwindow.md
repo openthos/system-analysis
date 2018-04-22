@@ -29,8 +29,10 @@ chanuei@sina.com
   OTO_DATA=out/target/product/x86_64/data.img
   .........
 ```
-#Xposed/XposedTools/build.conf
+根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数：  
+如multiwindows_xposed在docker apple下的位置为用户home目录，则XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
 
+Xposed/XposedTools/build.conf，也需要做一定的修改。
 ```
 [General]
   outdir = /root/test/multiwindow_xposed/out
@@ -52,8 +54,8 @@ chanuei@sina.com
  22 = /root/test/multiwindow_xposed
 ```
 
-根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数：  
-如multiwindows_xposed在docker apple下的位置为用户home目录，则XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
+[General]节outdir、javadir参数及[AospDir]节参数22，也要按实际路径进行修改。
+
 修改完成后运行 ./make_xposed_oto_img.sh即可创建xposed_x86_64_oto.img  
 
 dd把xposed_x86_64_oto.img写在U盘上即可  
