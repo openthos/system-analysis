@@ -7,10 +7,7 @@
   
   复制到自己的docker下，其中multiwindow目录可以自己从185服务器上repo建立。  
   
-  multiwindow_xposed，可以先从185服务器上repo multiwindow分支成multiwindow_xposed。
-然后用/mnt/SSD/multiwindow_xposed/art掉换掉你repo出来的multiwindow_xposed/art，
-并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的
-multiwindow_xposed/framework/base/cmds/下  
+  multiwindow_xposed，可以先从185服务器上repo multiwindow分支成multiwindow_xposed。然后用/mnt/SSD/multiwindow_xposed/art掉换掉你repo出来的multiwindow_xposed/art，并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的multiwindow_xposed/framework/base/cmds/下  
   
   Xposed目录下的make_xposed_oto_img.sh是编译脚本  
 
@@ -31,51 +28,55 @@ multiwindow_xposed/framework/base/cmds/下
 ```
 
 根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数：  
-如multiwindows_xposed在docker apple下的位置为用户home目录，则
-XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
+如multiwindows_xposed在docker apple下的位置为用户home目录，则XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
 修改完成后运行 ./make_xposed_oto_img.sh即可创建xposed_x86_64_oto.img  
 
-dd把xposed_x86_64_oto.img写在U盘上即可
+dd把xposed_x86_64_oto.img写在U盘上即可  
 
-
-二、编译时可能遇到的几个问题（均与perl模拟不全有关）
-
-	1. Perl模块不全的问题，需要自行安装相关模块，即可解决
-	1.1 Config/IniFiles.pm模块
-	报错内容：
-	Can't locate Config/IniFiles.pm in @INC (you may need to install the Config::IniFiles module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 10.
-	BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 10.
-	Compilation failed in require at ./build.pl line 9.
-	BEGIN failed--compilation aborted at ./build.pl line 9.
-	解决方法：
-		perl -MCPAN -e 'install Config::IniFiles'
-	 
-	1.2 File/ReadBackwards.pm模块
-	报错内容： 
-	Can't locate File/ReadBackwards.pm in @INC (you may need to install the File::ReadBackwards module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 12.
-	BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 12.
-	Compilation failed in require at ./build.pl line 9.
-	BEGIN failed--compilation aborted at ./build.pl line 9.
-	解决方法：
-		perl -MCPAN -e 'install File::ReadBackwards'
-
-	1.3 File/Tail.pm模块
-	报错内容： 
-	Can't locate File/Tail.pm in @INC (you may need to install the File::Tail module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 13.
-	BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 13.
-	Compilation failed in require at ./build.pl line 9.
-	BEGIN failed--compilation aborted at ./build.pl line 9.
-	解决方法：
-	perl -MCPAN -e 'install File::Tail'
-
-	1.4 Archive/Zip.pm模块
-	报错内容：
-	Can't locate Archive/Zip.pm in @INC (you may need to install the Archive::Zip module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at ./build.pl line 11.
-	BEGIN failed--compilation aborted at ./build.pl line 11.
-	解决方法：
-		apt-get install libarchive-zip-perl
-	注意:
-		这个模块比较特殊，不是由perl安装的，而是操作系统安装的。
+# 二、编译时可能遇到的几个问题（均与perl模拟不全有关）
+1. Perl模块不全的问题，需要自行安装相关模块，即可解决
+1.1 Config/IniFiles.pm模块
+报错内容：
+```
+Can't locate Config/IniFiles.pm in @INC (you may need to install the Config::IniFiles module) (@INC contains:/root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 10.  ·
+BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 10.  ·
+Compilation failed in require at ./build.pl line 9. 
+BEGIN failed--compilation aborted at ./build.pl line 9.
+```
+解决方法：
+```bash
+  root@docker # perl -MCPAN -e 'install Config::IniFiles'
+```
+1.2 File/ReadBackwards.pm模块  
+报错内容： 
+Can't locate File/ReadBackwards.pm in @INC (you may need to install the File::ReadBackwards module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 12.  
+BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 12.  
+Compilation failed in require at ./build.pl line 9.  
+BEGIN failed--compilation aborted at ./build.pl line 9.
+解决方法：
+```bash
+root@docker # perl -MCPAN -e 'install File::ReadBackwards'
+```
+1.3 File/Tail.pm模块  
+报错内容：   
+Can't locate File/Tail.pm in @INC (you may need to install the File::Tail module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at /root/test/Xposed/XposedTools/Xposed.pm line 13.  
+BEGIN failed--compilation aborted at /root/test/Xposed/XposedTools/Xposed.pm line 13.  
+Compilation failed in require at ./build.pl line 9.  
+BEGIN failed--compilation aborted at ./build.pl line 9.  
+解决方法：  
+```bash
+root@docker # perl -MCPAN -e 'install File::Tail'
+```
+1.4 Archive/Zip.pm模块  
+报错内容：  
+Can't locate Archive/Zip.pm in @INC (you may need to install the Archive::Zip module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at ./build.pl line 11.  
+BEGIN failed--compilation aborted at ./build.pl line 11.  
+解决方法：  
+```bash
+root@docker # apt-get install libarchive-zip-perl
+```
+注意:  
+  这个模块比较特殊，不是由perl安装的，而是操作系统安装的。
 
 	1.5 Tie/IxHash.pm模块
 	报错内容：
