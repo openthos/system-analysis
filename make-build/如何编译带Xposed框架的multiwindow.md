@@ -33,7 +33,8 @@
 
 dd把xposed_x86_64_oto.img写在U盘上即可  
 
-# 二、编译时可能遇到的几个问题（均与perl模拟不全有关）  
+# 二、编译时可能遇到的几个问题（均与perl模拟不全有关）
+
 1. Perl模块不全的问题，需要自行安装相关模块，即可解决  
 1.1 Config/IniFiles.pm模块  
 报错内容：  
@@ -112,15 +113,15 @@ make_xposed_oto_img.sh文件
 # 四、关于编译的问题
 这个脚本共有三大部分，一个是编译Xposed框架，一个是编译multiwindow，最后才是生成集成镜像
 前两个编译如果不是必要重新编译，可以注释掉，以节省编译时间。如下所示：
-	----------------------------------
+```bash
 	pushd XposedTools
 	echo XposedTools: Xposed for X86_64 with SDK22 will be built...
 	#./build.pl -t x86_64:22
 	echo XposedTools: Xposed for X86_64 with SDK22 is successfully built.
 	popd
-	----------------------------------
+```
 文件中的./build.pl -t x86_64:22即为编译xposed
-	----------------------------------
+```bash
 	pushd $OTO_SRC_DIR
 	echo MultiWindow: Openthos Multiwindow will be built...
 	#source build/envsetup.sh
@@ -130,7 +131,7 @@ make_xposed_oto_img.sh文件
 	  echo [ Error ] MultiWindow: Failed to build oto_img for android_x86_64-user
 	  exit $EXIT_OTO_BUILD_FAILED
 	fi
-	--------------------------------------
+```
 文件中的source build/envsetup.sh; lunch android_x86_64-user; make -j32 oto_img即为编译multiwindow
 
 
