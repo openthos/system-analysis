@@ -1,44 +1,41 @@
 # 一、如何编译带Xposed框架的multiwindow
-  ssh登录180服务器，有如下目录  
-	1. /mnt/SSD/Xposed目录  
-	2. /mnt/SSD/multiwindow_xposed目录  
-	3. /mnt/SSD/multiwindow目录  
-	是必须的  
+  ssh登录180服务器，有如下目录
+  1. /mnt/SSD/Xposed目录
+  2. /mnt/SSD/multiwindow_xposed目录
+  3. /mnt/SSD/multiwindow目录
+  是必须的
   
   复制到自己的docker下，其中multiwindow目录可以自己从185服务器上repo建立。  
   
   multiwindow_xposed，可以先从185服务器上repo multiwindow分支成multiwindow_xposed。
-	然后用/mnt/SSD/multiwindow_xposed/art掉换掉你repo出来的multiwindow_xposed/art，
-	并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的
-	multiwindow_xposed/framework/base/cmds/下  
+然后用/mnt/SSD/multiwindow_xposed/art掉换掉你repo出来的multiwindow_xposed/art，
+并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的
+multiwindow_xposed/framework/base/cmds/下  
   
   Xposed目录下的make_xposed_oto_img.sh是编译脚本  
 
 ```bash
   #!/bin/bash
-
-		XPOSED_OTO_SRC_DIR=~/test/multiwindow_xposed
-		OTO_SRC_DIR=~/test/multiwindow
-
-		BOTO=efi.tar.bz2
-		BOTO_HOME=bootable/newinstaller/install/refind
-
-		OTO_INITRD=out/target/product/x86_64/oto_initrd.img
-		OTO_INSTALL=out/target/product/x86_64/install.img
-		OTO_RAMDISK=out/target/product/x86_64/ramdisk.img
-		OTO_KERNEL=out/target/product/x86_64/kernel
-		OTO_DATA=out/target/product/x86_64/data.img
-		.........
+  XPOSED_OTO_SRC_DIR=~/test/multiwindow_xposed
+  OTO_SRC_DIR=~/test/multiwindow
+  
+  BOTO=efi.tar.bz2
+  BOTO_HOME=bootable/newinstaller/install/refind
+  
+  OTO_INITRD=out/target/product/x86_64/oto_initrd.img
+  OTO_INSTALL=out/target/product/x86_64/install.img
+  OTO_RAMDISK=out/target/product/x86_64/ramdisk.img
+  OTO_KERNEL=out/target/product/x86_64/kernel
+  OTO_DATA=out/target/product/x86_64/data.img
+  .........
 ```
 
+根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数：  
+如multiwindows_xposed在docker apple下的位置为用户home目录，则
+XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
+修改完成后运行 ./make_xposed_oto_img.sh即可创建xposed_x86_64_oto.img  
 
-	根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数
-
-	如multiwindows_xposed在docker apple下的位置为用户home目录，则XPOSED_OTO_SRC_DIR=~/multiwindow_xposed
-
-	修改完成后运行 ./make_xposed_oto_img.sh即可创建xposed_x86_64_oto.img
-
-	dd把xposed_x86_64_oto.img写在U盘上即可
+dd把xposed_x86_64_oto.img写在U盘上即可
 
 
 二、编译时可能遇到的几个问题（均与perl模拟不全有关）
