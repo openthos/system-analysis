@@ -29,6 +29,28 @@ chanuei@sina.com
   OTO_DATA=out/target/product/x86_64/data.img
   .........
 ```
+#Xposed/XposedTools/build.conf
+
+```
+[General]
+  outdir = /root/test/multiwindow_xposed/out
+  javadir = /root/test/Xposed/XposedBrigde
+   
+  [Build]
+  # Please keep the base version number and add your custom suffix
+  version = 89 (custom build by David Chan / %s)
+  # makeflags = -j4
+ 
+ [GPG]
+ sign = release
+ user = 852109AA!
+ 
+ # Root directories of the AOSP source tree per SDK version
+ [AospDir]
+ 19 = /android/aosp/440
+ 21 = /android/aosp/500
+ 22 = /root/test/multiwindow_xposed
+```
 
 根据自己docker下的目录情况改参数XPOSED_OTO_SRC_DIR及OTO_SRC_DIR参数：  
 如multiwindows_xposed在docker apple下的位置为用户home目录，则XPOSED_OTO_SRC_DIR=~/multiwindow_xposed  
