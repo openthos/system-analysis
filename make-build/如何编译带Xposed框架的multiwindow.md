@@ -86,7 +86,7 @@ BEGIN failed--compilation aborted at ./build.pl line 11.
 root@docker # apt-get install libarchive-zip-perl
 ```
 注意:  
-  这个模块比较特殊，不是由perl安装的，而是操作系统安装的。
+  这个模块比较特殊，不是由perl安装的，而是操作系统安装的。  
 1.5 Tie/IxHash.pm模块  报错内容：  
 ```
 Can't locate Tie/IxHash.pm in @INC (you may need to install the Tie::IxHash module) (@INC contains: /root/test/Xposed/XposedTools /etc/perl /usr/local/lib/perl/5.18.2 /usr/local/share/perl/5.18.2 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.18 /usr/share/perl/5.18 /usr/local/lib/site_perl .) at ./build.pl line 18.
