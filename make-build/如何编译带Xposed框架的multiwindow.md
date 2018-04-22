@@ -1,7 +1,7 @@
-# <center> 编译带Xposed框架的multiwindow </>
+#  编译带Xposed框架的multiwindow 
 陈威（三寸丁）    2018/04/22  
 chanuei@sina.com  
-# 一、如何编译带Xposed框架的multiwindow
+## 一、如何编译带Xposed框架的multiwindow
   ssh登录180服务器，有如下目录
   1. /mnt/SSD/Xposed目录
   2. /mnt/SSD/multiwindow_xposed目录
@@ -36,7 +36,7 @@ chanuei@sina.com
 
 dd把xposed_x86_64_oto.img写在U盘上即可  
 
-# 二、编译时可能遇到的几个问题（均与perl模拟不全有关）
+## 二、编译时可能遇到的几个问题（均与perl模拟不全有关）
 
 1. Perl模块不全的问题，需要自行安装相关模块，即可解决  
 1.1 Config/IniFiles.pm模块  
@@ -95,7 +95,7 @@ Can't locate Tie/IxHash.pm in @INC (you may need to install the Tie::IxHash modu
 ```bash
 root@docker # perl -MCPAN -e 'install Tie::IxHash'
 ```  
-# 三、如何在系统中额外添加基于Xposed的插件程序
+## 三、如何在系统中额外添加基于Xposed的插件程序
 make_xposed_oto_img.sh文件
 ```bash
 	popd
@@ -113,7 +113,7 @@ make_xposed_oto_img.sh文件
 中间注释掉的#cp -f src dest处，写入相应的复制apk到/system的代码，如
 	cp <your Calculator apk path> /system/app/Calculator/Calculator.apk
 	
-# 四、关于编译的问题
+## 四、关于编译的问题
 这个脚本共有三大部分，一个是编译Xposed框架，一个是编译multiwindow，最后才是生成集成镜像
 前两个编译如果不是必要重新编译，可以注释掉，以节省编译时间。如下所示：
 ```bash
