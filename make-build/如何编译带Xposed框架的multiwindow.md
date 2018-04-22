@@ -134,4 +134,4 @@ make_xposed_oto_img.sh文件
 ```
 文件中的source build/envsetup.sh; lunch android_x86_64-user; make -j32 oto_img即为编译multiwindow
 
-
+注意当art发生修改后，必须通知我（chenwei01@thtfpc.com  chanuei@sina.com）重建art。
