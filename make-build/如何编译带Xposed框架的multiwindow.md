@@ -10,7 +10,7 @@ chanuei@sina.com
   
   复制到自己的docker下，其中multiwindow目录可以自己从185服务器上repo建立。  
   
-  multiwindow_xposed，可以先从185服务器上repo multiwindow分支成multiwindow_xposed。然后用/mnt/SSD/multiwindow_xposed/art掉换掉你repo出来的multiwindow_xposed/art，并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的multiwindow_xposed/framework/base/cmds/下  
+  multiwindow_xposed，可以先从185服务器上repo multiwindow分支成multiwindow_xposed。然后在multiwindow_xposed/art目录下git checkout v89-sdk22-multiwindow，并将/mnt/SSD/multiwindow_xposed/framework/base/cmds/xposed复制到repo出来的multiwindow_xposed/framework/base/cmds/下  
   
   Xposed目录下的make_xposed_oto_img.sh是编译脚本  
 
