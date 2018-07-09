@@ -23,10 +23,10 @@
 # 提交补丁说明
 **相关分支 ：** 必须有multiwindow分支，是远程对应的x86/multiwindow，可通过git branch -a查看，
 git checkout -b multiwindow x86/multiwindow来创建此分支到本地。  
-**创建devorg: ** 先用git remote -v查看，默认有x86，在其路径后面加".git"作为新路径创建，
+**创建devorg：** 先用git remote -v查看，默认有x86，在其路径后面加".git"作为新路径创建，
 例如frameworks/base是git://192.168.0.185/lollipop-x86/platform/frameworks/base  
 **创建命令：**git remote add devorg git://192.168.0.185/lollipop-x86/platform/frameworks/base.git $@  
-**提交命令 ：** git push devorg multiwindow:refs/heads/multiwindow，有时候可能需要先同步远程，然后再打补丁提交。
+**提交命令：** git push devorg multiwindow:refs/heads/multiwindow，有时候可能需要先同步远程，然后再打补丁提交。
 相关的同步命令是git pull devorg multiwindow:refs/heads/multiwindow
 
 # 发送邮件（以Ubuntu系统为开发系统为例）
