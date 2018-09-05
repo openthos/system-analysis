@@ -175,5 +175,26 @@ for i in /sys/block/$d/$d* /sys/block/$d; do
                         [ -d $i ] && ( grep "`basename $i:`" $tempfile || echo "`basename $i` unknown" )
                 done
 ```
+改进为类似下面这们便于阅读及直观理解的代码结构：  
+```
+disk=$(basename $1)
+        for i in /sys/block/$disk/$disk*;do
+                partNum=$(cat $i/partition)
+                case $partNum in
+                1)
+                        ker_part=/dev/$(basename $i)
+                        ;;
+                2)
+                        sys_part=/dev/$(basename $i)
+                        ;;
+                3)
+                        data_part=/dev/$(basename $i)
+                        ;;
+                *)
+                        ;;
+                esac
+        done
+```
+
 7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。这样只要该硬盘内核能认识，安装程序就可以准确进行识别，而需要每次见到新的硬盘种类都需要去给init和install脚本打补丁  
 8. 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
