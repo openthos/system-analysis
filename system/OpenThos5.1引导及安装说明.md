@@ -165,7 +165,7 @@ get_param_from_bootargs()
     fi
   }
 ```
-6. 对于黄志伟先生在init及install中类似如下的代码进行了便于阅读的处理，并进行了大量的函数化工作  
+6. 对于黄志伟先生在init中类似如下的代码进行了便于阅读的处理，并进行了大量的函数化工作  
 `for device in ${ROOT:-/dev/[hmnsv][dmrv][0-9a-z]*}; do`
 ```bash
 for i in /sys/block/$d/$d* /sys/block/$d; do
@@ -198,3 +198,65 @@ disk=$(basename $1)
 
 7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。这样只要该硬盘内核能认识，安装程序就可以准确进行识别，而需要每次见到新的硬盘种类都需要去给init和install脚本打补丁  
 8. 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
+## 安装流程
+安装流程分为两种分别是Auto及Manual
+```bash
+hd_install()
+{
+        hd_prepare_install
+        hd_user_guide
+        if [ $? -eq 1 ];then
+                hd_manual_install
+                sum=5;while [[ sum -gt 0 ]];do echo $sum;sum=`expr $sum - 1`;dialog --title " REBOOTING OPENTHOS" --infobox "\n        $sum" 7 30 ;sleep 1; done
+        else
+                hd_auto_install
+        fi
+        rebooting
+}
+```
+安装程序载入后选择是Auto还是Manual
+### Auto Install
+```bash
+hd_auto_install()
+{
+        dialog --title "Auto Install OPENTHOS" --defaultno --yesno "will ERASE whole hard drive,Continue?" 5 45
+        if [ $? -eq 0 ];then
+                select_whole_dev || rebooting
+                rebuild_all_partition /dev/$choice
+                hd_install_all /dev/$choice
+        fi
+        rebooting
+}
+```
+选择硬盘，对硬盘进行分区，最后再将相应内容安装到硬盘上去。
+### Manual Install
+```bash
+hd_manual_install()
+{
+        until boto_install_hd; do
+                if [ $retval -eq 255 ]; then
+                        dialog --title ' Error! ' --yes-label Retry --no-label Reboot \
+                                --yesno '\nInstallation failed! Please check if you have enough free disk space to install OPENTHOS.' 8 51
+                        [ $? -eq 1 ] && rebooting
+                fi
+        done
+        until boto_install_system_hd; do
+                if [ $retval -eq 255 ]; then
+                        dialog --title ' Error! ' --yes-label Retry --no-label Reboot \
+                                --yesno '\nInstallation system failed!' 8 51
+                        [ $? -eq 1 ] && rebooting
+                fi
+        done
+        until boto_install_data_hd; do
+                if [ $retval -eq 255 ]; then
+                        dialog --title ' Error! ' --yes-label Retry --no-label Reboot \
+                                --yesno '\nInstallation data failed!' 8 51
+                        [ $? -eq 1 ] && rebooting
+                fi
+        done
+        sum=5;while [[ sum -gt 0 ]];do echo $sum;sum=`expr $sum - 1`;dialog --title " REBOOTING OPENTHOS" --infobox "\n        $sum" 7 30 ;sleep 1; done
+        rebooting
+}
+```
+分别询问在哪个分区上安装boto(refind)，system，data的内容。  
+基本上相关的内容都尽量进行了函数化。
