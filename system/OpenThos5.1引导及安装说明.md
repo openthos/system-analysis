@@ -17,7 +17,7 @@ Android X86项目
 ### Android X86的引导流程
 0. Stage1 BootCode由BIOS装载（仅限于Legacy BIOS机器），即硬盘上的启动扇区（不具体分析，可以参考MBR格式的硬盘分区资料）
 1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2。Grub2不具备识别BCB块内容直接进入到recovery状态的能力。因此Android—X86上未实现recovery分区。
-2. Stage2 BootCode加载内核及相应的ramdisk。 但由于体系结构的差异，直接加载原生Android的ramdisk分区将会导致启动过程中出现一系列的问题。因此黄志伟先生用busybox先做了一个initrd. 在这个系统中先将环境处理成符合Android的要求后再将系统Switch-root到Android的ramdisk.
+2. Stage2 BootCode加载内核及相应的ramdisk。 但由于体系结构的差异，直接加载原生Android的ramdisk分区将会导致启动过程中出现一系列的问题。因此黄志伟先生用busybox先做了一个initrd. 在这个系统中先将环境处理成符合Android的要求后再将系统Switch-root到Android的ramdisk. 下面简要分析
 ```bash
 echo -n Detecting OPENTHOS...
 
@@ -43,4 +43,21 @@ while :; do
         sleep 1
         echo -n .
 done
+```
+首先通过iso-scan来扫描哪个硬盘分区上存在Android-X86的iso镜像　　
+然后在check_root这一步通过loop设备一层层的挂系统，iso:/ramdisk.img->/android   iso:/system.sfs—>/sfs  sfs/system.img->/android/system。　　
+```bash
+if [ -n "$INSTALL" ]; then
+        zcat /src/install.img | ( cd /; cpio -iud > /dev/null )
+fi
+
+if [ -x system/bin/ln -a \( -n "$DEBUG" -o -n "$BUSYBOX" \) ]; then
+        mv /bin /lib .
+        sed -i 's|\( PATH.*\)|\1:/bin|' init.environ.rc
+        rm /sbin/modprobe
+        busybox mv /sbin/* sbin
+        rmdir /sbin
+        ln -s android/bin android/lib android/sbin /
+        hash -r
+fi
 ```
