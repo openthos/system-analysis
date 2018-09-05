@@ -1,11 +1,10 @@
 # OpenThos5.1引导及安装说明
 
-## 引导代码初始来源
-Android X86项目
-### Android X86项目引导原理
+引导代码初始来源于Android X86项目
+## Android X86项目引导原理
 众所周知谷歌的Android发行之初并不是面向PC的，因此其也不是设计用于从BIOS或UEFI启动的。
 因此虽然AOSP中的代码可以按X86或X86_64的方式编译，但其并不能用于真实的PC，除却BSP方面的问题便是引导的原因了。
-#### 标准Android系统的启动流程
+### 标准Android系统的启动流程
 1. 硬件的BOOTROM根据芯片相应管脚的电平高低决定是进行出厂线刷还是正常启动逻辑。简单理解就是从Flash启动还是等着从USB等接口上喂数据。下面以正常启动流程来讲述  
 2. BOOTROM根据引脚配置决定从FLASH中启动，由于NAND，NVME等等FLASH都不具备XIP特性，因此BOOTROM需要从这样的代码里面把系统加载到内存里执行。但实际上由于同一样芯片上可以运行Linux也可能运行Windows Embedded，甚至其他各种各样的RTOS。BOOTROM也不知道需要加载多少代码，因此厂家默认将是复制比较小的一块程序代码到内存。这段代码我们可以看着Stage1 BootCode。然后就将控制权交给Stage1 BootCode。
 3. 前面我们讲到此时系统内存中没有整个操作系统的其他部分，只有Stage1 BootCode，而通常这个Stage1 BootCode都只能非常小，其计量单位以K计。依赖着这个BootCode要想加载全部的系统进内存，通常也不现实。因为此时，首先系统工作在一个极其低效率的状态，通常是12MHz或是24MHz这样的主频上，大量的外设也没有初始化。因此现代操作系统通常在这一步，初始化核心外设，设置系统工作频率。这些工作干完了，空间也就用得差不多，已经不足以加载全部的操作系统。这部分代码通常由汇编来实现，轻轻松松的一个C运行时库都可能撑爆这个空间。因此为了完成后续的工作，Stage1 BootCode就需要从Flash中取出正式的引导程序，这里我们称之为Stage2 BootCode，并为Stage2 BootCode设置好C运行时库的栈。然后将控制权交给Stage2 BootCode。
@@ -14,7 +13,7 @@ Android X86项目
 4.2 如果是正常启动模式，对需要由Fastboot进行初始化的设备进行初始化后，加载内核并设置ramdisk为ramdisk分区，并指示system及data分区分别位于flash上的什么地方，然后便将控制权交给Kernnel.
 5 Kernel在执行过程中将在init.rc等文件的指示下进行Android系统运行所需要的一系列初始化工作，并挂system、data等相关分区，随后调用zygote进入Android环境。  
 因此在PC上运行Android系统需要对其进行一定的改造，让其能从BIOS或是UEFI逐步引导到Android环境
-#### Android X86的引导流程
+### Android X86的引导流程
 0. Stage1 BootCode由BIOS装载（仅限于Legacy BIOS机器），即硬盘上的启动扇区（不具体分析，可以参考MBR格式的硬盘分区资料）
 1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2。Grub2不具备识别BCB块内容直接进入到recovery状态的能力。因此Android—X86上未实现recovery分区。
 2. Stage2 BootCode加载内核及相应的ramdisk。 但由于体系结构的差异，直接加载原生Android的ramdisk分区将会导致启动过程中出现一系列的问题。因此黄志伟先生用busybox先做了一个initrd. 在这个系统中先将环境处理成符合Android的要求后再将系统Switch-root到Android的ramdisk. 下面简要分析
@@ -80,7 +79,7 @@ echo > /proc/sys/kernel/hotplug
 exec ${SWITCH:-switch_root} /android /init
 ```
 跳转到Android环境中去。
-## OpenThos的改进之处
+# OpenThos的改进之处
 OpenThos基本上参照了Android-X86的引导流程。
 但OpenThos做了如下工作：
 1. 将引导程序于Ｇrub2切换到Refind
