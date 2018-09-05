@@ -78,7 +78,7 @@ echo > /proc/sys/kernel/hotplug
 ```bash
 exec ${SWITCH:-switch_root} /android /init
 ```
-跳转到Android环境中去。
+3. 跳转到Android环境中去。
 # OpenThos的改进之处
 OpenThos基本上参照了Android-X86的引导流程。
 但OpenThos做了如下工作：
