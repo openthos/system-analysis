@@ -16,5 +16,31 @@ Android X86项目
 因此在PC上运行Android系统需要对其进行一定的改造，让其能从BIOS或是UEFI逐步引导到Android环境
 ### Android X86的引导流程
 0. Stage1 BootCode由BIOS装载（仅限于Legacy BIOS机器），即硬盘上的启动扇区（不具体分析，可以参考MBR格式的硬盘分区资料）
-1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2
-2. 
+1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2。Grub2不具备识别BCB块内容直接进入到recovery状态的能力。因此Android—X86上未实现recovery分区。
+2. Stage2 BootCode加载内核及相应的ramdisk。 但由于体系结构的差异，直接加载原生Android的ramdisk分区将会导致启动过程中出现一系列的问题。因此黄志伟先生用busybox先做了一个initrd. 在这个系统中先将环境处理成符合Android的要求后再将系统Switch-root到Android的ramdisk.
+```bash
+echo -n Detecting OPENTHOS...
+
+[ -z "$SRC" -a -n "$BOOT_IMAGE" ] && SRC=`dirname $BOOT_IMAGE`
+
+for c in `cat /proc/cmdline`; do
+        case $c in
+                iso-scan/filename=*)
+                        eval `echo $c | cut -b1-3,18-`
+                        ;;
+                *)
+                        ;;
+        esac
+done
+
+mount -t tmpfs tmpfs /android
+cd /android
+while :; do
+       for device in ${ROOT:-/dev/[hmnsv][dmrv][0-9a-z]*}; do
+               check_root $device && break 2
+               mountpoint -q /mnt && umount /mnt
+        done
+        sleep 1
+        echo -n .
+done
+```
