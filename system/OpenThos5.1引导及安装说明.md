@@ -102,3 +102,77 @@ debug_shell()
   popd
 }
 ```
+4. 对于取内核引导时获得的参数抽像了方法，构建了函数　　
+```bash
+get_param_from_bootargs()
+  {
+    if [ "$#" -ne 1 ]; then
+      dbg_echo "get_param_from_bootargs: The func should be called with 1 parameters, but $# parameters found"
+      return $ERROR_PARMETER
+    fi
+
+    for c in `cat $CMDLINE`; do
+      case $c in
+      $1=*)
+        local tempParam="$(echo $c | cut -d"=" -f2)"
+        if [ -n "$tempParam" ]; then
+          eval $1=$tempParam
+          return $VALUE_FOUND
+        fi
+        ;;
+      *)
+        ;;
+      esac
+    done
+
+    dbg_echo "get_param_from_bootargs: No value for $1 found"
+    return $VALUE_MISS
+  }
+  ```
+  5. 为解决系统安装后部分分区调整而导致分区编号错乱而导到的加载失败，构建了通过UUID来加载分区的方法。
+  ```
+  #----------------------------------
+  # by: David Chan (chanuei@sina.com)
+  # date: 2016-08-31
+  #
+  # Func: mount_part_via_uuid
+  # Param:
+  #   $1, uuid of the part to be loaded.
+  #   $2, mountpoint, the part to be mounted to.
+  #   $3, options, "ro" "rw" etc.
+  mount_part_via_uuid()
+  {
+    if [ "$#" -ne 3 ] && [ "$#" -ne 2 ]; then
+      dbg_echo "mount_part_via_uuid: The func should be called with 2 parameters, but $# parameters found"
+      return $ERROR_PARMETER
+    fi
+
+    if [ ! -d "$2" ]; then
+      mkdir -p $2
+    fi
+    local fsType
+    get_hd_fstype $1 fsType
+    if [ $?=$PARAM_FOUND ] && [ "$#" -eq 3 ]; then
+      local varMountOption="-o $3"
+    fi
+    dbg_echo "fsType for $1 is $fsType"
+    if [ "$fsType" = "ntfs" ] || [ "$fsType" = "NTFS" ]; then
+      hdPart="$(for c in `blkid | grep -m 1 -i $1`; do  echo $c | grep -i "/dev" | cut -d":" -f1; done)"
+      dbg_echo "mount.ntfs-3g $hdPart $2"
+      mount.ntfs-3g $hdPart $2
+    else
+      dbg_echo "mount -t $fsType $varMountOption UUID=$1 $2"
+      mount -t $fsType $varMountOption UUID=$1 $2
+    fi
+  }
+```
+6. 对于黄志伟先生在init及类似如下的代码进行了便于阅读的处理
+`for device in ${ROOT:-/dev/[hmnsv][dmrv][0-9a-z]*}; do`
+```bash
+for i in /sys/block/$d/$d* /sys/block/$d; do
+                        [ -e $i/partition ] && p=1
+                        [ $p -eq 1 -a "$i" = "/sys/block/$d" ] && break
+                        echo $i | grep -q -E "boot|rpmb" && continue
+                        [ -d $i ] && ( grep "`basename $i:`" $tempfile || echo "`basename $i` unknown" )
+                done
+```
