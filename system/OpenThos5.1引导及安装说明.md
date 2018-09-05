@@ -175,5 +175,5 @@ for i in /sys/block/$d/$d* /sys/block/$d; do
                         [ -d $i ] && ( grep "`basename $i:`" $tempfile || echo "`basename $i` unknown" )
                 done
 ```
-7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。  
+7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。这样只要该硬盘内核能认识，安装程序就可以准确进行识别，而需要每次见到新的硬盘种类都需要去给init和install脚本打补丁  
 8. 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
