@@ -14,7 +14,7 @@ Android X86项目
 4.2 如果是正常启动模式，对需要由Fastboot进行初始化的设备进行初始化后，加载内核并设置ramdisk为ramdisk分区，并指示system及data分区分别位于flash上的什么地方，然后便将控制权交给Kernnel.
 5 Kernel在执行过程中将在init.rc等文件的指示下进行Android系统运行所需要的一系列初始化工作，并挂system、data等相关分区，随后调用zygote进入Android环境。  
 因此在PC上运行Android系统需要对其进行一定的改造，让其能从BIOS或是UEFI逐步引导到Android环境
-### Android X86的引导流程
+#### Android X86的引导流程
 0. Stage1 BootCode由BIOS装载（仅限于Legacy BIOS机器），即硬盘上的启动扇区（不具体分析，可以参考MBR格式的硬盘分区资料）
 1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2。Grub2不具备识别BCB块内容直接进入到recovery状态的能力。因此Android—X86上未实现recovery分区。
 2. Stage2 BootCode加载内核及相应的ramdisk。 但由于体系结构的差异，直接加载原生Android的ramdisk分区将会导致启动过程中出现一系列的问题。因此黄志伟先生用busybox先做了一个initrd. 在这个系统中先将环境处理成符合Android的要求后再将系统Switch-root到Android的ramdisk. 下面简要分析
@@ -44,7 +44,7 @@ while :; do
         echo -n .
 done
 ```
-首先通过iso-scan来扫描哪个硬盘分区上存在Android-X86的iso镜像　　
+首先通过iso-scan来扫描哪个硬盘分区上存在Android-X86的iso镜像或特定文件夹下是否有system.sfs文件　　
 然后在check_root这一步通过loop设备一层层的挂系统，iso:/ramdisk.img->/android   iso:/system.sfs—>/sfs  sfs/system.img->/android/system。　　
 ```bash
 if [ -n "$INSTALL" ]; then
@@ -80,3 +80,25 @@ echo > /proc/sys/kernel/hotplug
 exec ${SWITCH:-switch_root} /android /init
 ```
 跳转到Android环境中去。
+## OpenThos的改进之处
+OpenThos基本上参照了Android-X86的引导流程。
+但OpenThos做了如下工作：
+1. 将引导程序于Ｇrub2切换到Refind
+2. 将/android/system的源从iso文件、.sfs变更到硬盘上的/system分区
+3. 将原代码中关于DEBUG模式重复出现的调用shell的代码段抽象成函数
+```bash
+debug_shell()
+{
+  pushd
+
+  if [ -e system/bin/sh ] && [ -x system/bin/sh ]; then
+    echo Running MirBSD Korn Shell...
+    USER="($1)" system/bin/sh -l 2>&1
+  else
+    echo Running busybox ash...
+    sh 2>&1
+  fi
+
+  popd
+}
+```
