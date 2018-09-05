@@ -195,9 +195,23 @@ disk=$(basename $1)
                 esac
         done
 ```
+7. 增加了recovery方法
+```bash
+  get_param_from_bootargs RECOVERY
+  if [ "$RECOVERY" = "1" -o -e /android/data/rec_reset ];then
+    recovery_hint
+    if [ $? -eq 0 ];then
+       get_param_from_bootargs DATA_HD_UUID
+       DATA_PART=`blkid | grep $DATA_HD_UUID | awk -F ":" '{print $1;}'`
+       DATA_FS=`blkid | grep $DATA_HD_UUID | awk -F "TYPE=" '{print $2;}' | cut -d \" -f 2`
+       umount -f $DATA_PART
+       mke2fs -t $DATA_FS -L "oto_data" -U $DATA_HD_UUID -F $DATA_PART > /dev/null
+       mount $DATA_PART data
+    fi
+  fi
+```
+8. 增加了update方法
 
-7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。这样只要该硬盘内核能认识，安装程序就可以准确进行识别，而需要每次见到新的硬盘种类都需要去给init和install脚本打补丁  
-8. 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
 ## 安装流程
 安装流程分为两种分别是Auto及Manual
 ```bash
@@ -259,4 +273,6 @@ hd_manual_install()
 }
 ```
 分别询问在哪个分区上安装boto(refind)，system，data的内容。  
-基本上相关的内容都尽量进行了函数化。
+基本上相关的内容都尽量进行了函数化。且：  
+* 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。这样只要该硬盘内核能认识，安装程序就可以准确进行识别，而需要每次见到新的硬盘种类都需要去给init和install脚本打补丁  
+* 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
