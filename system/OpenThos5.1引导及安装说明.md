@@ -16,4 +16,5 @@ Android X86项目
 因此在PC上运行Android系统需要对其进行一定的改造，让其能从BIOS或是UEFI逐步引导到Android环境
 ### Android X86的引导流程
 0. Stage1 BootCode由BIOS装载（仅限于Legacy BIOS机器），即硬盘上的启动扇区（不具体分析，可以参考MBR格式的硬盘分区资料）
-2.
+1. Stage2 BootCode由Stage1 BootCode或UEFI装载，对于Android_x86项目而言，即为Grub2
+2. 
