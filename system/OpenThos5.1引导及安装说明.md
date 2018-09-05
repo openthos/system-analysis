@@ -50,7 +50,9 @@ done
 if [ -n "$INSTALL" ]; then
         zcat /src/install.img | ( cd /; cpio -iud > /dev/null )
 fi
-
+```
+判断是否要启动安装程序进行安装  
+```
 if [ -x system/bin/ln -a \( -n "$DEBUG" -o -n "$BUSYBOX" \) ]; then
         mv /bin /lib .
         sed -i 's|\( PATH.*\)|\1:/bin|' init.environ.rc
@@ -60,4 +62,21 @@ if [ -x system/bin/ln -a \( -n "$DEBUG" -o -n "$BUSYBOX" \) ]; then
         ln -s android/bin android/lib android/sbin /
         hash -r
 fi
+...
+# Other normal steps
+load_modules
 ```
+为下一步启动Android准备好设备驱动
+```bash
+mount_data
+mount_sdcard
+setup_tslib
+setup_dpi
+...
+echo > /proc/sys/kernel/hotplug
+```
+设置Android所需要环境  
+```bash
+exec ${SWITCH:-switch_root} /android /init
+```
+跳转到Android环境中去。
