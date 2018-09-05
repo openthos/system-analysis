@@ -166,7 +166,7 @@ get_param_from_bootargs()
     fi
   }
 ```
-6. 对于黄志伟先生在init及类似如下的代码进行了便于阅读的处理
+6. 对于黄志伟先生在init及install中类似如下的代码进行了便于阅读的处理，并进行了大量的函数化工作  
 `for device in ${ROOT:-/dev/[hmnsv][dmrv][0-9a-z]*}; do`
 ```bash
 for i in /sys/block/$d/$d* /sys/block/$d; do
@@ -176,3 +176,5 @@ for i in /sys/block/$d/$d* /sys/block/$d; do
                         [ -d $i ] && ( grep "`basename $i:`" $tempfile || echo "`basename $i` unknown" )
                 done
 ```
+7. 将原来关于硬盘的识别由指定/dev/sdxx /dev/nvmexx这样的开头来扫描改进为通过/sys/class/block接口来判定一个设备是否硬盘设备。  
+8. 将原来存在于可用磁盘列表中的可移动磁盘从列表中清楚，并将所有的大小计数单位由原来的block数量统一为MB，便于安装时直观理解。
