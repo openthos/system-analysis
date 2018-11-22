@@ -50,3 +50,5 @@ sudo swapon /.16GB.swap
 ```bash
 sudo echo '/.16GB.swap 　none  swap  sw  0 0' > /etc/fstab
 ```
+
+###环境设置###
