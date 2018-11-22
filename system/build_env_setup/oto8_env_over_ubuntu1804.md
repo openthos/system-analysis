@@ -51,5 +51,30 @@ sudo swapon /.16GB.swap
 sudo echo '/.16GB.swap 　none  swap  sw  0 0' > /etc/fstab
 ```
 
-###环境设置###
-
+### 环境设置
+要在Ubuntu18.04正确编译，你需要安装如下软件包：
+curl repo git m4 make lib32stdc++(或是g++-multilib) python python-mako openjdk-8-jdk zlig1g-dev libelf-dev libssl-dev 
+其中受限于网络管控，repo无法直接通过apt安装，其余的软件包均可通过apt在线安装。方法是：  
+```bash
+sudo apt update
+sudo apt install curl  git m4 make g++-multilib python python-mako openjdk-8-jdk zlig1g-dev libelf-dev libssl-dev 
+```
+#### 安装repo  
+可以先进行如下的尝试:  
+```bash
+mkdir ~/bin
+PATH=~/bin:$PATH
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+```  
+不过通常与直接从apt安装repo一样，我们在受管控的网络环境中也很难从googleapis.com下载repo。因此我们可以从清华的tuna服务器借用一个他们mirror回来的repo。将上面的指令改成下面这样即可  
+```bash
+mkdir ~/bin
+PATH=~/bin:$PATH
+curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo > ~/bin/repo
+chmod a+x ~/bin/repo
+```  
+repo的运行过程中会尝试访问官方的git源更新自己，如果想使用tuna的镜像源进行更新，可在你的~/.bashrc文件的最后加上一行如下的内容
+```
+export REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/'
+```
