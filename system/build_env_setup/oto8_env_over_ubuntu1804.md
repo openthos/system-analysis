@@ -97,3 +97,6 @@ fi
 **make**  
 在16.04以前，该软件包在build-essential包安装时，将一并安装。而在Ubuntu18.04环境中，make不再包含于build-essential软件包中，如果不单独安装该软件包，在编译OPENTHOS的过程中将会遇到`Command 'make' not found`的问题：  
 ![make_missing](images/make_missing.png)  
+**lib32stdc++或g++-multilib**  
+OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison程序在运行过程中需要用到stdc++的32位库，而这些库在AOSP的prebuilt中并未提供，因此需要单独安装。否则将会出现`/bin/bash: prebuilts/misc/linux-x86/bison/bison: No such file or directory`的问题：  
+![bison_missing](images/bison_missing.png)  
