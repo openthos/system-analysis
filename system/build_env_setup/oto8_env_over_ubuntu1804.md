@@ -34,4 +34,5 @@ Ubuntu 16.04或Ubuntu18.04，本例中我们仅以Ubuntu18.04为例进行介绍�
 这种情况通常出现在内存较小的机器上，OPENTHOS在编译过程中需要使用大量的内存空间来加快编译的速度，当内存耗尽时就会出现上图的报错。这时我们需要创建一个SWAP文件并通过此文件来充当交换分区来弥补内存不足的问题。方法如下：
 １. 创建一个SWAP文件
 ```bash
-sudo dd if=/dev/zero of=/.16GB.swap```  
+sudo dd if=/dev/zero of=/.16GB.swap
+```  
