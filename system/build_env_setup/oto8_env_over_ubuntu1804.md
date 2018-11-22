@@ -90,3 +90,7 @@ if [ -d "$HOME/bin" ] ; then
 fi
 ```  
 如果没有，则在~/.profile文件的最后加上这几行内容即可为当前用户永久性设置上相应的PATH环境变量。  
+#### 关于各软件包的说明
+**M4**  
+在16.04以前，该软件包在build-essential包安装时，将一并安装。而在Ubuntu18.04环境中，m4不再包含于build-essential软件包中，如果不单独安装该软件包，在编译OPENTHOS的过程中将会遇到如下问题：  
+![m4_missing](images/m4_missing.png)
