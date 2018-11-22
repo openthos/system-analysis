@@ -80,7 +80,7 @@ repo的运行过程中会尝试访问官方的git源更新自己，如果遇到�
 ```
 export REPO_URL='https://gerrit-googlesource.proxy.ustclug.org/git-repo'
 ```
-***永久性设置PATH环境***
+***永久性设置PATH环境***  
 前面的说明中设置的PATH环境，只是一次性有效。在某些非以自动方式安装Ubuntu系统的主机上，当“终端”程序被关闭重启后，您可能需要再一次设置PATH才能继续使用repo。  
 检查您的~/.profile文件的最后部分是否有如下几行的内容：  
 ```
