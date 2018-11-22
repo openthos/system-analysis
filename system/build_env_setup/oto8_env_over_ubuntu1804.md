@@ -94,3 +94,6 @@ fi
 **M4**  
 在16.04以前，该软件包在build-essential包安装时，将一并安装。而在Ubuntu18.04环境中，m4不再包含于build-essential软件包中，如果不单独安装该软件包，在编译OPENTHOS的过程中将会遇到`/bin/bash: m4: command not found`的问题：  
 ![m4_missing](images/m4_missing.png)
+**make**  
+在16.04以前，该软件包在build-essential包安装时，将一并安装。而在Ubuntu18.04环境中，make不再包含于build-essential软件包中，如果不单独安装该软件包，在编译OPENTHOS的过程中将会遇到`/bin/bash: make: command not found`的问题：  
+![make_missing](images/make_missing.png)
