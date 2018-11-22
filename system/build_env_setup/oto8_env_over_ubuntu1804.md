@@ -35,4 +35,14 @@ Ubuntu 16.04或Ubuntu18.04，本例中我们仅以Ubuntu18.04为例进行介绍�
 １. 创建一个SWAP文件
 ```bash
 sudo dd if=/dev/zero of=/.16GB.swap
+sudo chmod 600 /.16GB.swap
+```  
+2. 格式化SWAP文件
+```bash
+sudo mkswap /.16GB.swap
+```  
+３. 激活SWAP文件
+```bash
+sudo dd if=/dev/zero of=/.16GB.swap
+sudo chmod 600 /.16GB.swap
 ```  
