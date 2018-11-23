@@ -58,8 +58,8 @@ curl repo git m4 make lib32stdc++(或是g++-multilib) python python-mako openjdk
 ```bash
 sudo apt update
 sudo apt install curl  git m4 make g++-multilib \
-        python python-mako openjdk-8-jdk zlig1g-dev \
-        libelf-dev libssl-dev 
+        python python-mako openjdk-8-jdk zlib1g-dev \
+        libelf-dev libssl-dev libxml2-utils
 ```
 #### 安装repo  
 可以先进行如下的尝试:  
@@ -106,3 +106,27 @@ OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison�
 **python-mako**  
 编译OPENTHOS8.1需要用到python2.7的扩展模块mako，该模块的名称是python-mako，在Ubuntu18.04中需要手动安装.如未安装，在编译OPENTHOS，将出现错误提示“ImportError: No module name mako.template”：  
 ![mako_template_missing](images/mako_template_missing.png)  
+**openjdk-8-jdk**
+OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1一样要用到java，在Ubuntu18.04上我们要用到的软件包是openjdk-8-jdk。至于不安装java环境的后果，在此我们不作描述。
+**zlib1g-dev**
+**libelf-dev**
+**libssl-dev**
+**libxml2-utils**
+OPENTHOS8.1中的部分组件需要用到xmllint来解析xml文件，在Ubuntu18.04上xmllint从属于软件包libxml2-utils，在Ubuntu18.04上该软件包默认并未安装libxml2-utils软件包，因此需要手动安装。如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: xmllint: command not found”：  
+![xmllint_missing](images/xml_lint_missing.png)  
+####关于如何确认编译时提示的程序或库是属于哪一个软件包  
+
+```bash
+sudo apt install apt-file
+sudo apt-file update
+apt-file search '<待查找文件>'
+```
+以xmllint为例，xmllint并不是一个完整的软件包名称，在OPENTHOS编译系统出现如下图错误提示“/bin/bash: xmllint: command not found”时：
+![xmllint_missing](images/xml_lint_missing.png)  
+只要在终端中运行  
+
+```bash
+apt-file search 'xmllint'
+```
+系统将列出所有与xmllint有关的软件包  
+![search_xmllint](images/app_file_search_xmllint.png)  
