@@ -137,3 +137,9 @@ apt-file search 'xmllint'
 sudo apt install libxml2-utils
 ```  
 遇到缺少其他软件包的问题可以参考xmllint的情况解决。  
+#### 明明程序在，却说找不到程序的情况
+从AOSP8.0或是更最早的版本（具体哪一版本，我们未做验证），Google将很多编译系统所需要的程序都塞到了prebuilts中，比如前面提到的bison、flex，在编译AOSP时不再需要主机操作系统所提供的程序。这种大而全的设计：一方面貌似解决很多所需要程序的问题，从我们前面要安装的软件包列表就可以看出，确实较之以往，要安装的软件包少了很多；但实际上也带来了一些新的困扰，当我们在编译AOSP8+及其𧗠生产品时，我们会发现一些prebuilts中已经包含的程序在使用编译过程，编译系统却报找不到该程序。
+比如前面提到的bison，在编译过程中就会被爆出找不到:  
+![bison_missing](images/bison_missing.png)  
+初开始怀疑bison确实不存在或是权限有问题，然后通过ll命令查看bison文件发现文件存在且权限正常，如下图所示：  
+![bison_filestat](images/bison_file_stat.png)  
