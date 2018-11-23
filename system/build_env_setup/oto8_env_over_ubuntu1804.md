@@ -102,7 +102,7 @@ OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison�
 ![bison_missing](images/bison_missing.png)  
 **python**
 编译OPENTHOS8.1需要用到python2.7，而Ubuntu18.04中默认安装的是python3.x，因此需要手动安装python2.7。python2.7在Ubuntu18.04中的包名是python，如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: python: command not found”：  
-![bison_missing](images/python_missing.png)  
+![python_missing](images/python_missing.png)  
 **python-mako**  
 编译OPENTHOS8.1需要用到python2.7的扩展模块mako，该模块的名称是python-mako，在Ubuntu18.04中需要手动安装.如未安装，在编译OPENTHOS，将出现错误提示“ImportError: No module name mako.template”：  
-![bison_missing](images/mako_template_missing.png)  
+![mako_template_missing](images/mako_template_missing.png)  
