@@ -114,8 +114,10 @@ OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1�
 **libxml2-utils**
 OPENTHOS8.1中的部分组件需要用到xmllint来解析xml文件，在Ubuntu18.04上xmllint从属于软件包libxml2-utils，在Ubuntu18.04上该软件包默认并未安装libxml2-utils软件包，因此需要手动安装。如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: xmllint: command not found”：  
 ![xmllint_missing](images/xml_lint_missing.png)  
-####关于如何确认编译时提示缺少的的程序或库是属于哪一个软件包  
-当系统提示“/bin/”
+#### 关于如何确认编译时提示缺少的的程序或库是属于哪一个软件包  
+当系统提示“/bin/bash: xxx: command not found”或是哪个库找不到时，说明编译OPENTHOS8.1要用到的该系统程序或库在Ubuntu18.04中尚未安装。如果我们知道该程序或库从属于哪个软件包可以直接调用“sudo apt install”进行安装。但往往程序或库的名字与其所属的软件包名称并不相同。这将导致我们不知道该安装哪个软件包来解决相关依赖。  
+下面我们介绍一下在不知道包名的情况下，如何确定程序或库从属于哪个软件包。  
+我们需要用到一个工具叫apt-file，下面我们安装apt-file并更新其数据库。  
 ```bash
 sudo apt install apt-file
 sudo apt-file update
