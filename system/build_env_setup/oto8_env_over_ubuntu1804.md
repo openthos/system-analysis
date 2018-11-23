@@ -143,3 +143,12 @@ sudo apt install libxml2-utils
 ![bison_missing](images/bison_missing.png)  
 初开始怀疑bison确实不存在或是权限有问题，然后通过ll命令查看bison文件发现文件存在且权限正常，如下图所示：  
 ![bison_filestat](images/bison_file_stat.png)  
+因此便合理怀疑是不是bison的依赖关系未得到满足，导致其不能在Ubuntu18.04上执行。我们通过ldd命令来看看bison都调用了哪些库：   
+![bison_lib_deps](images/bison_lib_deps.png)  
+经查Ubuntu18.04的默认安装内容中不包含“/usr/lib32/libstdc++6.so.6“，那么我们按前面方法所述用“apt-file search”查出“/usr/lib32/libstdc++6.so.6“源自于哪个软件包：  
+![libstdc++6_for_lib32](images/libstdc++6_for_lib32.png)  
+从上图我们可以看出库“/usr/lib32/libstdc++6.so.6“来自于软件lib32stdc++6，调用“apt install”安装lib32stdc++6软件包后，发现其他库也都有了。重新编译发现，不再报找不到bison的错误。  
+如果今后发现其他prebuilts中存在的程序被报找不到的错误，可以参考这个思路解决。
+## 下载OPENTHOS8.1代码  
+## 编译OPENTHOS8.1  
+## 试运行及安装OPENTHOS8.1  
