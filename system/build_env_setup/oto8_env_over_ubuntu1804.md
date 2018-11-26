@@ -179,9 +179,11 @@ lunch
 ```bash
 make oto_img  #此为生成用于机器的.img文件
 ```
-**编译过程中可能出现的错误**  
+### 编译过程中可能出现的错误  
 绝大部分可能出现的问题，我们在上一章“环境设置”中都有所提及，且给出了我们是如何分析出安装什么样的软件包来解决问题的。  
-不过在编译时仍有可能出现一个问题，此不问题不是安装软件包可以解决的。其主要原因是OPENTHOS8.1继承自AOSP8.1的prebuilts/mis/linux-x86/flex/flex-2.5.39与Ubuntu18.04存在一定的兼容性问题，在UTF8的locale下，将在编译过程中出现错误提示“flex-2.5.39: loadlocale.c:130: \_nl_intern_locale_data: Assertion ...... failed.”:  
+不过在编译时仍有可能出现一个问题，此不问题不是安装软件包可以解决的。  
+#### flex工作异常
+OPENTHOS8.1继承自AOSP8.1的prebuilts/mis/linux-x86/flex/flex-2.5.39与Ubuntu18.04存在一定的兼容性问题，在UTF8的locale下，将在编译过程中出现错误提示“flex-2.5.39: loadlocale.c:130: \_nl_intern_locale_data: Assertion ...... failed.”:  
 ![flex_utf8_problem](images/locale_data_assertion.png)  
 解决的方法共有两种：  
 1. 编译时指定环境变量LC_ALL=C或LC_TYPE=C
@@ -189,6 +191,16 @@ make oto_img  #此为生成用于机器的.img文件
 LC_ALL=C make oto_img  #此为生成用于机器的.img文件
 ```
 2. 解压prebuilts/misc/linux-x86/flex/flex-2.5.39.tar.gz，在Ubuntu18.04下重新编译，将生成的flex复制成prebuilts/misc/linux-x86/flex/flex-2.5.39  
+#### java编译器堆空间不足异常
+由于AOSP在编译过程中要消耗大量的内存，在某些内存不是太大的机器上可能会出现这个问题。比如我们用于测试的机器，8GB内存，经由编译系统其他部分的占用后，可用内存在java编译器工作时，自动分配的堆空间仍不够用。  
+![heapsize_error](images/heapsize_error.png)  
+解决的方法是通过设置环境变量告诉jack-server建立一个较大的java堆空间。  
+```bash
+jack-admin kill-server
+export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4g"
+jack-admin start-server
+```  
+***注：jack-admin在source build/envsetup.sh后可用  
 ## 试运行及安装OPENTHOS8.1  
 ### 生成安装U盘
 ```bash
