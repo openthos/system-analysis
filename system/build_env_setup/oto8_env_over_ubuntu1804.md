@@ -90,7 +90,9 @@ if [ -d "$HOME/bin" ] ; then
 fi
 ```  
 如果没有，则在~/.profile文件的最后加上这几行内容即可为当前用户永久性设置上相应的PATH环境变量。  
-#### 关于各软件包的说明
+#### 关于各软件包的说明  
+**curl及git**  
+curl与git对于每一个开发人员来说意味着什么，这里我们不再缀述。  
 **M4**  
 在16.04以前，该软件包在build-essential包安装时，将一并安装。而在Ubuntu18.04环境中，m4不再包含于build-essential软件包中，如果不单独安装该软件包，在编译OPENTHOS的过程中将会出现错误提示`/bin/bash: m4: command not found`：  
 ![m4_missing](images/m4_missing.png)  
@@ -153,5 +155,38 @@ sudo apt install libxml2-utils
 从上图我们可以看出库“/usr/lib32/libstdc++6.so.6“来自于软件lib32stdc++6，调用“apt install”安装lib32stdc++6软件包后，发现其他库也都有了。重新编译发现，不再报找不到bison的错误。  
 如果今后发现其他prebuilts中存在的程序被报找不到的错误，可以参考这个思路解决。
 ## 下载OPENTHOS8.1代码  
+**建立工作目录:**  
+```bash
+$ mkdir WORKING_DIRECTORY
+$ cd WORKING_DIRECTORY
+```
+**初始化仓库, 并选择multiwindow-oreo版本:**
+```bash
+repo init -u git://192.168.0.185/nougat-x86/manifest.git -b multiwindow-nougat
+repo sync
+```
 ## 编译OPENTHOS8.1  
+在终端中执行如下命令  
+```bash
+cd WORKING_DIRECTORY
+source build/envsetup.sh
+lunch
+```
+系统给出如下选单:  
+![lunch](images/oto8_lunch.png)  
+选择14到16的以openthos开头的项目即可  
+现在可以运行编译命令开始整个编译的过程。  
+```bash
+make oto_img  #此为生成用于机器的.img文件
+```
 ## 试运行及安装OPENTHOS8.1  
+### 生成安装U盘
+```bash
+$ sudo dd if=out/target/product/openthos/openthos_x86_64_oto.img of=/dev/sdx #需要根据主机上的硬盘确定，对于只有一块硬盘的主机而言通常U盘是/dev/sdb
+```
+### 运行  
+1. 将刚生成的U盘插入到目标计算机上，并按下目标计算机的电源以启动目标计算机
+2. 设置目标电脑为UEFI模式启动，在启动时按F10/F12（根据具体的机器而言，通常是F10或是F12，但也有可能是其他按键）进入到启动引导项选择界面。选择从U盘启动，并回车。
+3. 在新出现的图形选单上，按左右键选择OPENTHOS，回车便可以以liveusb方式启动OPENTHOS，如需要其他方式，请在按回车前按F2键。  
+现在您可以尽情感受OPENTHOS带来的极致体验了。  
+
