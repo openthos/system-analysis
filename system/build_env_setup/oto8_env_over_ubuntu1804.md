@@ -107,10 +107,12 @@ OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison�
 编译OPENTHOS8.1需要用到python2.7的扩展模块mako，该模块的名称是python-mako，在Ubuntu18.04中需要手动安装.如未安装，在编译OPENTHOS，将出现错误提示“ImportError: No module name mako.template”：  
 ![mako_template_missing](images/mako_template_missing.png)  
 **openjdk-8-jdk**  
-OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1一样要用到java，在Ubuntu18.04上我们要用到的软件包是openjdk-8-jdk。至于不安装java环境的后果，在此我们不作描述。
+OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1一样要用到java，在Ubuntu18.04上我们要用到的软件包是openjdk-8-jdk。至于不安装java环境的后果，在此我们不作描述。  
 **zlib1g-dev**  
-**libelf-dev**  
-**libssl-dev**  
+
+**libelf-dev及libssl-dev**  
+AOSP本身未用到libelf-dev及libssl-dev软件包，但在编译OPENTHOS8.1的内核Modules时，系统需要用到libelf-dev软件包。因此需要手动安装该软件包。如果缺少这两个软件包，系统将会出现错误提示“kernel/Makefile:957: "Cannot user CONFIG_STACK_VALIDATION=y, please install libelf-dev, ..."”
+
 **libxml2-utils**  
 OPENTHOS8.1中的部分组件需要用到xmllint来解析xml文件，在Ubuntu18.04上xmllint从属于软件包libxml2-utils，在Ubuntu18.04上该软件包默认并未安装libxml2-utils软件包，因此需要手动安装。如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: xmllint: command not found”：  
 ![xmllint_missing](images/xml_lint_missing.png)  
