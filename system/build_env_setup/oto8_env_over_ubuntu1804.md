@@ -100,18 +100,18 @@ fi
 **lib32stdc++或g++-multilib**  
 OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison程序在运行过程中需要用到stdc++的32位库，而这些库在AOSP的prebuilt中并未提供，因此需要单独安装。否则将会出现错误提示`/bin/bash: prebuilts/misc/linux-x86/bison/bison: No such file or directory`：  
 ![bison_missing](images/bison_missing.png)  
-**python**
+**python**  
 编译OPENTHOS8.1需要用到python2.7，而Ubuntu18.04中默认安装的是python3.x，因此需要手动安装python2.7。python2.7在Ubuntu18.04中的包名是python，如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: python: command not found”：  
 ![python_missing](images/python_missing.png)  
 **python-mako**  
 编译OPENTHOS8.1需要用到python2.7的扩展模块mako，该模块的名称是python-mako，在Ubuntu18.04中需要手动安装.如未安装，在编译OPENTHOS，将出现错误提示“ImportError: No module name mako.template”：  
 ![mako_template_missing](images/mako_template_missing.png)  
-**openjdk-8-jdk**
+**openjdk-8-jdk**  
 OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1一样要用到java，在Ubuntu18.04上我们要用到的软件包是openjdk-8-jdk。至于不安装java环境的后果，在此我们不作描述。
-**zlib1g-dev**
-**libelf-dev**
-**libssl-dev**
-**libxml2-utils**
+**zlib1g-dev**  
+**libelf-dev**  
+**libssl-dev**  
+**libxml2-utils**  
 OPENTHOS8.1中的部分组件需要用到xmllint来解析xml文件，在Ubuntu18.04上xmllint从属于软件包libxml2-utils，在Ubuntu18.04上该软件包默认并未安装libxml2-utils软件包，因此需要手动安装。如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: xmllint: command not found”：  
 ![xmllint_missing](images/xml_lint_missing.png)  
 #### 关于如何确认编译时提示缺少的的程序或库是属于哪一个软件包  
