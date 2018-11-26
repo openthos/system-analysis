@@ -109,9 +109,10 @@ OPENTHOS8.1基于AOSP8.1，AOSP8.1中自带了一个prebuilt的bison，该bison�
 **openjdk-8-jdk**  
 OPENTHOS8.1作为Android8.1的一个变体，其开发过程中必然同AOSP8.1一样要用到java，在Ubuntu18.04上我们要用到的软件包是openjdk-8-jdk。至于不安装java环境的后果，在此我们不作描述。  
 **zlib1g-dev**  
-
+OPENTHOS8.1在编译过程上中需要用到zlib1g-dev软件包中的libz，Ubuntu18.04系统默认只安装了zlib1g，因此需要手动安装zlib1g-dev.  
 **libelf-dev及libssl-dev**  
-AOSP本身未用到libelf-dev及libssl-dev软件包，但在编译OPENTHOS8.1的内核Modules时，系统需要用到libelf-dev软件包。因此需要手动安装该软件包。如果缺少这两个软件包，系统将会出现错误提示“kernel/Makefile:957: "Cannot user CONFIG_STACK_VALIDATION=y, please install libelf-dev, ..."”
+AOSP本身未用到libelf-dev及libssl-dev软件包，但在编译OPENTHOS8.1的内核Modules时，系统需要用到libelf-dev软件包。因此需要手动安装该软件包。如果缺少这两个软件包，系统将会出现错误提示“kernel/Makefile:957: "Cannot user CONFIG_STACK_VALIDATION=y, please install libelf-dev, ..."”以及“kernel/scripts/extrack-cert.c:21:10: fatal error: openssl/bio.h: No such file or direcotry”:  
+![libssl_missing](images/openssl_bio_h_missing.png)  
 
 **libxml2-utils**  
 OPENTHOS8.1中的部分组件需要用到xmllint来解析xml文件，在Ubuntu18.04上xmllint从属于软件包libxml2-utils，在Ubuntu18.04上该软件包默认并未安装libxml2-utils软件包，因此需要手动安装。如未安装，在编译OPENTHOS，将出现错误提示“/bin/bash: xmllint: command not found”：  
