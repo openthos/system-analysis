@@ -200,7 +200,7 @@ jack-admin kill-server
 export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4g"
 jack-admin start-server
 ```  
-***注：jack-admin在source build/envsetup.sh后可用  
+***注：jack-admin在source build/envsetup.sh后可用***  
 ## 试运行及安装OPENTHOS8.1  
 ### 生成安装U盘
 ```bash
