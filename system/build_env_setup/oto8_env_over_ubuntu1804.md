@@ -179,7 +179,7 @@ lunch
 ```bash
 make oto_img  #此为生成用于机器的.img文件
 ```
-**编译过程中可能出现的错误**
+**编译过程中可能出现的错误**  
 绝大部分可能出现的问题，我们在上一章“环境设置”中都有所提及，且给出了我们是如何分析出安装什么样的软件包来解决问题的。  
 不过在编译时仍有可能出现一个问题，此不问题不是安装软件包可以解决的。其主要原因是OPENTHOS8.1继承自AOSP8.1的prebuilts/mis/linux-x86/flex/flex-2.5.39与Ubuntu18.04存在一定的兼容性问题，在UTF8的locale下，将在编译过程中出现错误提示“flex-2.5.39: loadlocale.c:130: \_nl_intern_locale_data: Assertion ...... failed.”:  
 ![flex_utf8_problem](images/locale_data_assertion.png)  
