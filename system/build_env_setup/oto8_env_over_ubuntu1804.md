@@ -186,7 +186,7 @@ make oto_img  #此为生成用于机器的.img文件
 OPENTHOS8.1继承自AOSP8.1的prebuilts/mis/linux-x86/flex/flex-2.5.39与Ubuntu18.04存在一定的兼容性问题，在UTF8的locale下，将在编译过程中出现错误提示“flex-2.5.39: loadlocale.c:130: \_nl_intern_locale_data: Assertion ...... failed.”:  
 ![flex_utf8_problem](images/locale_data_assertion.png)  
 解决的方法共有两种：  
-1. 编译时指定环境变量LC_ALL=C或LC_TYPE=C
+1. 编译时指定环境变量LC_ALL=C或LC_CTYPE=C
 ```bash
 LC_ALL=C make oto_img  #此为生成用于机器的.img文件
 ```
