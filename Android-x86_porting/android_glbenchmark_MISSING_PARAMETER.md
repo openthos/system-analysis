@@ -360,3 +360,184 @@ objdump -T lib/x86_64/*.so | grep getDeviceInfo
 	...
 ```
 由于汇编代码可读性较差，所以使用IDA Pro工具生成代码流程图：
+![getDeviceInfo](getDeviceInfo.png)
+使用IDA Pro工具生成伪C语言代码：
+```
+_DWORD *__fastcall Java_net_kishonti_netman_swig_netmanlibJNI_Services_1getDeviceInfo(__int64 a1, __int64 a2, std::string *a3, __int64 a4, __int64 a5, __int64 a6)
+{
+  __int64 v6; // r12
+  __int64 v7; // rbx
+  int *v8; // rsi
+  __int64 v9; // rdi
+  __int64 v10; // r14
+  __int64 v11; // r12
+  const char *v12; // rax
+  const char *v13; // r14
+  unsigned __int64 v14; // rax
+  __int64 v15; // rdi
+  _DWORD *v16; // rax
+  _DWORD *v17; // r12
+  __int64 v18; // rax
+  _DWORD *result; // rax
+  _QWORD *v20; // r12
+  __int64 v21; // rax
+  __int64 v22; // rdi
+  __int64 v23; // rdx
+  __int64 v24; // rdi
+  __int64 v25; // rdi
+  _DWORD *v26; // r12
+  int v27; // eax
+  __int64 v28; // rax
+  _DWORD *v29; // ST08_8
+  _DWORD *v30; // ST08_8
+  _DWORD *v31; // r12
+  int v32; // eax
+  __int64 v33; // rax
+  _DWORD *v34; // ST08_8
+  __int64 v35; // [rsp+8h] [rbp-C0h]
+  const std::string *v36; // [rsp+18h] [rbp-B0h]
+  __int64 v37; // [rsp+40h] [rbp-88h]
+  __int64 v38; // [rsp+50h] [rbp-78h]
+  __int64 v39; // [rsp+60h] [rbp-68h]
+  int v40; // [rsp+70h] [rbp-58h]
+  __int64 v41; // [rsp+78h] [rbp-50h]
+  int v42; // [rsp+80h] [rbp-48h]
+  __int64 v43; // [rsp+88h] [rbp-40h]
+
+  v6 = a5;
+  v7 = a1;
+  v36 = a3;
+  v35 = a6;
+  v37 = (__int64)&std::string::_Rep::_S_empty_rep_storage + 24;
+  std::string::string(&v38, &off_1FBBB6, &v39);
+  v8 = 0LL;
+  netman::Status::Status((netman::Status *)&v40, 0, (const std::string *)&v38);
+  v9 = v38 - 24;
+  if ( (_UNKNOWN *)(v38 - 24) != &std::string::_Rep::_S_empty_rep_storage
+    && _InterlockedExchangeAdd((volatile signed __int32 *)(v38 - 8), 0xFFFFFFFF) <= 0 )
+  {
+    v8 = &v42;
+    std::string::_Rep::_M_destroy(v9, &v42);
+  }
+  if ( !v6 )
+  {
+    v26 = &unk_2C5740;
+    do
+    {
+      v27 = v26[4];
+      v26 += 4;
+    }
+    while ( v27 != 7 && v27 );
+    (*(void (__fastcall **)(__int64, int *))(*(_QWORD *)v7 + 136LL))(v7, v8);
+    v28 = (*(__int64 (__fastcall **)(__int64, _QWORD))(*(_QWORD *)v7 + 48LL))(v7, *((_QWORD *)v26 + 1));
+    if ( v28 )
+      (*(void (__fastcall **)(__int64, __int64, const char *))(*(_QWORD *)v7 + 112LL))(v7, v28, "null string");
+LABEL_25:
+    v23 = v41;
+    result = 0LL;
+    v24 = v41 - 24;
+    if ( (_UNKNOWN *)(v41 - 24) == &std::string::_Rep::_S_empty_rep_storage )
+      goto LABEL_18;
+    goto LABEL_26;
+  }
+  v10 = (*(__int64 (__fastcall **)(__int64, __int64, _QWORD))(*(_QWORD *)v7 + 1352LL))(v7, v6, 0LL);
+  if ( !v10 )
+    goto LABEL_25;
+  std::string::string(&v39, v10, &v42);
+  (*(void (__fastcall **)(__int64, __int64, __int64))(*(_QWORD *)v7 + 1360LL))(v7, v6, v10);
+  if ( !v35 )
+  {
+    v31 = &unk_2C5740;
+    do
+    {
+      v32 = v31[4];
+      v31 += 4;
+    }
+    while ( v32 != 7 && v32 );
+    (*(void (__fastcall **)(__int64))(*(_QWORD *)v7 + 136LL))(v7);
+    v33 = (*(__int64 (__fastcall **)(__int64, _QWORD))(*(_QWORD *)v7 + 48LL))(v7, *((_QWORD *)v31 + 1));
+    if ( v33 )
+      (*(void (__fastcall **)(__int64, __int64, const char *))(*(_QWORD *)v7 + 112LL))(v7, v33, "array null");
+    goto LABEL_15;
+  }
+  if ( !(*(unsigned int (__fastcall **)(__int64, __int64))(*(_QWORD *)v7 + 1368LL))(v7, v35) )
+  {
+    v20 = &unk_2C5740;
+    do
+      v20 += 2;
+    while ( *(_DWORD *)v20 & 0xFFFFFFFB );
+    (*(void (__fastcall **)(__int64))(*(_QWORD *)v7 + 136LL))(v7);
+    v21 = (*(__int64 (__fastcall **)(__int64, _QWORD))(*(_QWORD *)v7 + 48LL))(v7, v20[1]);
+    if ( v21 )
+      (*(void (__fastcall **)(__int64, __int64, const char *))(*(_QWORD *)v7 + 112LL))(
+        v7,
+        v21,
+        "Array must contain at least 1 element");
+    goto LABEL_15;
+  }
+  v11 = (*(__int64 (__fastcall **)(__int64, __int64, _QWORD))(*(_QWORD *)v7 + 1384LL))(v7, v35, 0LL);
+  if ( v11 )
+  {
+    v12 = (const char *)(*(__int64 (__fastcall **)(__int64, __int64, _QWORD))(*(_QWORD *)v7 + 1352LL))(v7, v11, 0LL);
+    v13 = v12;
+    if ( v12 )
+    {
+      v14 = strlen(v12);
+      std::string::assign((std::string *)&v37, v13, v14);
+      (*(void (__fastcall **)(__int64, __int64, const char *))(*(_QWORD *)v7 + 1360LL))(v7, v11, v13);
+      goto LABEL_9;
+    }
+LABEL_15:
+    result = 0LL;
+    goto LABEL_16;
+  }
+LABEL_9:
+  netman::Services::getDeviceInfo((netman::Services *)&v42, v36, (std::string *)&v39);
+  v40 = v42;
+  std::string::swap((std::string *)&v41, (std::string *)&v43);
+  v15 = v43 - 24;
+  if ( (_UNKNOWN *)(v43 - 24) != &std::string::_Rep::_S_empty_rep_storage
+    && _InterlockedExchangeAdd((volatile signed __int32 *)(v43 - 8), 0xFFFFFFFF) <= 0 )
+  {
+    std::string::_Rep::_M_destroy(v15, &v38);
+  }
+  v16 = (_DWORD *)operator new(0x10uLL);
+  v17 = v16;
+  *v16 = v40;
+  std::string::string((std::string *)(v16 + 2), (const std::string *)&v41);
+  v18 = (*(__int64 (__fastcall **)(__int64, __int64))(*(_QWORD *)v7 + 1336LL))(v7, v37);
+  (*(void (__fastcall **)(__int64, __int64, _QWORD, __int64))(*(_QWORD *)v7 + 1392LL))(v7, v35, 0LL, v18);
+  result = v17;
+LABEL_16:
+  v22 = v39 - 24;
+  if ( (_UNKNOWN *)(v39 - 24) != &std::string::_Rep::_S_empty_rep_storage
+    && _InterlockedExchangeAdd((volatile signed __int32 *)(v39 - 8), 0xFFFFFFFF) <= 0 )
+  {
+    v34 = result;
+    std::string::_Rep::_M_destroy(v22, &v42);
+    result = v34;
+  }
+  v23 = v41;
+  v24 = v41 - 24;
+  if ( (_UNKNOWN *)(v41 - 24) != &std::string::_Rep::_S_empty_rep_storage )
+  {
+LABEL_26:
+    if ( _InterlockedExchangeAdd((volatile signed __int32 *)(v23 - 8), 0xFFFFFFFF) <= 0 )
+    {
+      v29 = result;
+      std::string::_Rep::_M_destroy(v24, &v42);
+      result = v29;
+    }
+  }
+LABEL_18:
+  v25 = v37 - 24;
+  if ( (_UNKNOWN *)(v37 - 24) != &std::string::_Rep::_S_empty_rep_storage
+    && _InterlockedExchangeAdd((volatile signed __int32 *)(v37 - 8), 0xFFFFFFFF) <= 0 )
+  {
+    v30 = result;
+    std::string::_Rep::_M_destroy(v25, &v42);
+    result = v30;
+  }
+  return result;
+}
+```
