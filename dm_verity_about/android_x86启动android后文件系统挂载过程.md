@@ -168,7 +168,7 @@ struct fstab_rec {
     unsigned int zram_size;
 };
 ```  
-
+system/core/fs_mgr/fs_mgr_fstab.c中定义了fs_mgr_read_fstab():  
 ```c
 180 struct fstab *fs_mgr_read_fstab(const char *fstab_path)
 181 {
@@ -349,5 +349,150 @@ static struct flag_list fs_mgr_flags[] = {
     { 0,             0 },
 };
 ```  
-
-
+fstab.android_x86_64文件的内容将被fs_mgr_read_fstab()提取到fstab结构体中。  
+下一步将通过fs_mgr_mount_all()函数来挂载fstab.android_x86_64中全部列到的文件系统：  
+```c
+system/core/fs_mgr/fs_mgr.c
+341 /* When multiple fstab records share the same mount_point, it will
+342  * try to mount each one in turn, and ignore any duplicates after a
+343  * first successful mount.
+344  * Returns -1 on error, and  FS_MGR_MNTALL_* otherwise.
+345  */
+346 int fs_mgr_mount_all(struct fstab *fstab)
+347 {
+348     int i = 0;
+349     int encryptable = FS_MGR_MNTALL_DEV_NOT_ENCRYPTED;
+350     int error_count = 0;
+351     int mret = -1;
+352     int mount_errno = 0;
+353     int attempted_idx = -1;
+354 
+355     if (!fstab) {
+356         return -1;
+357     }
+358 
+359     for (i = 0; i < fstab->num_entries; i++) {
+360         /* Don't mount entries that are managed by vold */
+361         if (fstab->recs[i].fs_mgr_flags & (MF_VOLDMANAGED | MF_RECOVERYONLY)) {
+362             continue;
+363         }
+364 
+365         /* Skip swap and raw partition entries such as boot, recovery, etc */
+366         if (!strcmp(fstab->recs[i].fs_type, "swap") ||
+367             !strcmp(fstab->recs[i].fs_type, "emmc") ||
+368             !strcmp(fstab->recs[i].fs_type, "mtd")) {
+369             continue;
+370         }
+371 
+372         if (fstab->recs[i].fs_mgr_flags & MF_WAIT) {
+373             wait_for_file(fstab->recs[i].blk_device, WAIT_TIMEOUT);
+374         }
+375 
+376         if ((fstab->recs[i].fs_mgr_flags & MF_VERIFY) && device_is_secure()) {
+377             int rc = fs_mgr_setup_verity(&fstab->recs[i]);
+378             if (device_is_debuggable() && rc == FS_MGR_SETUP_VERITY_DISABLED) {
+379                 INFO("Verity disabled");
+380             } else if (rc != FS_MGR_SETUP_VERITY_SUCCESS) {
+381                 ERROR("Could not set up verified partition, skipping!\n");
+382                 continue;
+383             }
+384         }
+385         int last_idx_inspected;
+386         int top_idx = i;
+387 
+388         mret = mount_with_alternatives(fstab, i, &last_idx_inspected, &attempted_idx);
+389         i = last_idx_inspected;
+390         mount_errno = errno;
+391 
+392         /* Deal with encryptability. */
+393         if (!mret) {
+394             /* If this is encryptable, need to trigger encryption */
+395             if (   (fstab->recs[attempted_idx].fs_mgr_flags & MF_FORCECRYPT)
+396                 || (device_is_force_encrypted()
+397                     && fs_mgr_is_encryptable(&fstab->recs[attempted_idx]))) {
+398                 if (umount(fstab->recs[attempted_idx].mount_point) == 0) {
+399                     if (encryptable == FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
+400                         ERROR("Will try to encrypt %s %s\n", fstab->recs[attempted_idx].mount_poi    nt,
+401                               fstab->recs[attempted_idx].fs_type);
+402                         encryptable = FS_MGR_MNTALL_DEV_NEEDS_ENCRYPTION;
+403                     } else {
+404                         ERROR("Only one encryptable/encrypted partition supported\n");
+405                         encryptable = FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED;
+406                     }
+407                 } else {
+408                     INFO("Could not umount %s - allow continue unencrypted\n",
+409                          fstab->recs[attempted_idx].mount_point);
+410                     continue;
+411                 }
+412             }
+413             /* Success!  Go get the next one */
+414             continue;
+415         }
+416 
+417         /* mount(2) returned an error, handle the encryptable/formattable case */
+418         bool wiped = partition_wiped(fstab->recs[top_idx].blk_device);
+419         if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
+420             fs_mgr_is_formattable(&fstab->recs[top_idx]) && wiped) {
+421             /* top_idx and attempted_idx point at the same partition, but sometimes
+422              * at two different lines in the fstab.  Use the top one for formatting
+423              * as that is the preferred one.
+424              */
+425             ERROR("%s(): %s is wiped and %s %s is formattable. Format it.\n", __func__,
+426                   fstab->recs[top_idx].blk_device, fstab->recs[top_idx].mount_point,
+427                   fstab->recs[top_idx].fs_type);
+428             if (fs_mgr_is_encryptable(&fstab->recs[top_idx]) &&
+429                 strcmp(fstab->recs[top_idx].key_loc, KEY_IN_FOOTER)) {
+430                 int fd = open(fstab->recs[top_idx].key_loc, O_WRONLY, 0644);
+431                 if (fd >= 0) {
+432                     INFO("%s(): also wipe %s\n", __func__, fstab->recs[top_idx].key_loc);
+433                     wipe_block_device(fd, get_file_size(fd));
+434                     close(fd);
+435                 } else {
+436                     ERROR("%s(): %s wouldn't open (%s)\n", __func__,
+437                           fstab->recs[top_idx].key_loc, strerror(errno));
+438                 }
+439             }
+440             if (fs_mgr_do_format(&fstab->recs[top_idx]) == 0) {
+441                 /* Let's replay the mount actions. */
+442                 i = top_idx - 1;
+443                 continue;
+444             }
+445         }
+446         if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
+447             fs_mgr_is_encryptable(&fstab->recs[attempted_idx])) {
+448             if (wiped) {
+449                 ERROR("%s(): %s is wiped and %s %s is encryptable. Suggest recovery...\n", __func    __,
+450                       fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_poi    nt,
+451                       fstab->recs[attempted_idx].fs_type);
+452                 encryptable = FS_MGR_MNTALL_DEV_NEEDS_RECOVERY;
+453                 continue;
+454             } else {
+455                 /* Need to mount a tmpfs at this mountpoint for now, and set
+456                  * properties that vold will query later for decrypting
+457                  */
+458                 ERROR("%s(): possibly an encryptable blkdev %s for mount %s type %s )\n", __func_    _,
+459                       fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_poi    nt,
+460                       fstab->recs[attempted_idx].fs_type);
+461                 if (fs_mgr_do_tmpfs_mount(fstab->recs[attempted_idx].mount_point) < 0) {
+462                     ++error_count;
+463                     continue;
+464                 }
+465             }
+466             encryptable = FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED;
+467         } else {
+468             ERROR("Failed to mount an un-encryptable or wiped partition on"
+469                    "%s at %s options: %s error: %s\n",
+470                    fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
+471                    fstab->recs[attempted_idx].fs_options, strerror(mount_errno));
+472             ++error_count;
+473             continue;
+474         }
+475     }
+476 
+477     if (error_count) {
+478         return -1;
+479     } else {
+480         return encryptable;
+481     }
+482 }
+```  
