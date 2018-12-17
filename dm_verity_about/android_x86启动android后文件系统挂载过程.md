@@ -496,3 +496,4 @@ system/core/fs_mgr/fs_mgr.c
 481     }
 482 }
 ```  
+源码376行处，显示将根据MF_VERITY标志来决定是否以verity的方式使用相应的文件系统
