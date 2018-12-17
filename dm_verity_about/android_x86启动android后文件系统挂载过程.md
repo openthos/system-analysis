@@ -38,3 +38,11 @@ init.android_x86_64.rc中，在触发fs事件时，mount_all /fs.${ro.hardware}
  88 
 ```  
 mount_all命令将根据fstab.${ro.hardware}亦即fstab.android_x86_64来挂载相关文件系统。  
+```bash
+  1 none    /cache          tmpfs   nosuid,nodev,noatime    defaults
+  2 
+  3 auto    /storage/usb0   vfat    defaults        wait,voldmanaged=usb0:auto
+  4 auto    /storage/usb1   vfat    defaults        wait,voldmanaged=usb1:auto
+  5 auto    /storage/usb2   vfat    defaults        wait,voldmanaged=usb2:auto
+  6 auto    /storage/usb3   vfat    defaults        wait,voldmanaged=usb3:auto
+```  
