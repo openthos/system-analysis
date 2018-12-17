@@ -30,6 +30,7 @@ androidboot.hardware项在编译时被强制指定成了$(TARGET_PRODUCT)，对�
 
 ```  
 init.android_x86_64.rc中，在触发fs事件时，mount_all /fs.${ro.hardware}
+```bash
  84 
  85 on fs
  86     mount_all /fstab.${ro.hardware}
