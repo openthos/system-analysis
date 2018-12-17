@@ -10,7 +10,7 @@ Openthos派生自AOSP,因此同AOSP一样，Openthos的android部分总是从ini
  11 import /init.trace.rc
 ```
 对于Openthos来说${ro.hardware}，即为android_x86_64。这一点定义于device/generic/common/BoardConfig.mk
-```bash
+```Makefile
 75 BOARD_EGL_CFG ?= device/generic/common/gpu/egl_mesa.cfg
 76 endif
 77 
@@ -21,7 +21,7 @@ Openthos派生自AOSP,因此同AOSP一样，Openthos的android部分总是从ini
 ```  
 androidboot.hardware项在编译时被强制指定成了$(TARGET_PRODUCT)，对当前的OPENTHOS来说，也即是android_x86_64  
 在init.android_x86_64.rc，由device/generic/common/device.mk在编译时由init.x86.rc复制而成。
-```bash
+```Makefile
 37　     $(if $(wildcard $(PRODUCT_DIR)fstab.$(TARGET_PRODUCT)),$(PRODUCT_DIR)fstab.$(TARGET_PRODUCT),$(LOCAL_PATH)/fstab.x86):root/fstab.$(TARGET_PRODUCT) \
 38　     $(if $(wildcard $(PRODUCT_DIR)wpa_supplicant.conf),$(PRODUCT_DIR),$(LOCAL_PATH)/)wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
 39    　 $(if $(wildcard $(PRODUCT_DIR)excluded-input-devices.xml),$(PRODUCT_DIR),$(LOCAL_PATH)/)excluded-input-devices.xml:system/etc/excluded-input-devices.xml \
@@ -48,13 +48,13 @@ mount_all命令将根据fstab.${ro.hardware}亦即fstab.android_x86_64来挂载�
 ```  
 # 文件系统加载的细节  
 源码system/core/init/keywords.h文件中，指明了mount_all命令由函数do_mount_all实现  
-```bash
+```c
  74     KEYWORD(mkdir,       COMMAND, 1, do_mkdir)
  75     KEYWORD(mount_all,   COMMAND, 1, do_mount_all)
  76     KEYWORD(mount,       COMMAND, 3, do_mount)
 ```  
 函数do_mount_all定义于system/core/init/builtins.c 中  
-```bash
+```c
  682 /*
  683  * This function might request a reboot, in which case it will
  684  * not return.
@@ -142,7 +142,29 @@ mount_all命令将根据fstab.${ro.hardware}亦即fstab.android_x86_64来挂载�
 args[1]是传入的参数/fstab.android_x86_64,是一个文件，生成的位置在/out/target/product/x86_64/root/fstab.android_x86_64,生成这个文件的源文件位于/device/generci/common/fstab.x86。
 
 在do_mount_all()函数中，比较重要的两个函数如下:  
-`stab = fs_mgr_read_fstab(args[1]);   `  
+`fstab = fs_mgr_read_fstab(args[1]);   `  
 `child_ret = fs_mgr_mount_all(fstab);  `  
+首先我们看下fstab结构体和fstab.mt6797文件，fstab结构提要存储fstab.mt6797文件中的挂载信息，
+```c
+struct fstab {
+    int num_entries;
+    struct fstab_rec *recs;
+    char *fstab_filename;
+};
 
+struct fstab_rec {
+    char *blk_device;
+    char *mount_point;
+    char *fs_type;
+    unsigned long flags;
+    char *fs_options;
+    int fs_mgr_flags;
+    char *key_loc;
+    char *verity_loc;
+    long long length;
+    char *label;
+    int partnum;
+    int swap_prio;
+    unsigned int zram_size;
+};
 
