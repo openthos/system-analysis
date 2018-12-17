@@ -138,3 +138,11 @@ mount_all命令将根据fstab.${ro.hardware}亦即fstab.android_x86_64来挂载�
  762     return ret;
  763 }
 ```  
+原始代码如何通过fork（）来做防卸性编程以防止具体的挂载过程崩溃而导致init进程崩溃，我们不作分析。  
+args[1]是传入的参数/fstab.android_x86_64,是一个文件，生成的位置在/out/target/product/x86_64/root/fstab.android_x86_64,生成这个文件的源文件位于/device/generci/common/fstab.x86。
+
+在do_mount_all()函数中，比较重要的两个函数如下:  
+`stab = fs_mgr_read_fstab(args[1]);   `  
+`child_ret = fs_mgr_mount_all(fstab);  `  
+
+
