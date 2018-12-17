@@ -1,3 +1,5 @@
+<script src="//cdn.bootcss.com/highlightjs-line-numbers.js/1.1.0/highlightjs-line-numbers.min.js"></script>
+<script>hljs.initLineNumbersOnLoad();</script>
 # Openthos加载文件系统的路数  
 Openthos派生自AOSP,因此同AOSP一样，Openthos的android部分总是从init.rc开始的。  
 也同AOSP一样init.rc是一个公式起始。对于Openthos还有一个面向平台的init.android_x86_64.rc。  
