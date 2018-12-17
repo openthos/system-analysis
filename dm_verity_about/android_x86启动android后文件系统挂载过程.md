@@ -144,7 +144,7 @@ args[1]是传入的参数/fstab.android_x86_64,是一个文件，生成的位置
 在do_mount_all()函数中，比较重要的两个函数如下:  
 `fstab = fs_mgr_read_fstab(args[1]);   `  
 `child_ret = fs_mgr_mount_all(fstab);  `  
-首先我们看下fstab结构体和fstab.mt6797文件，fstab结构提要存储fstab.android_x86文件中的挂载信息，
+首先我们看下fstab结构体，fstab结构提要存储fstab.android_x86文件中的挂载信息，
 ```c
 struct fstab {
     int num_entries;
