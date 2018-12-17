@@ -305,5 +305,49 @@ struct fstab_rec {
 312 }
 313 
 ```  
+这个过程中要涉及到两个重要的结构体mount_flags和fs_mgr_flags：  
+```c
+static struct flag_list mount_flags[] = {
+    { "noatime",    MS_NOATIME },
+    { "noexec",     MS_NOEXEC },
+    { "nosuid",     MS_NOSUID },
+    { "nodev",      MS_NODEV },
+    { "nodiratime", MS_NODIRATIME },
+    { "ro",         MS_RDONLY },
+    { "rw",         0 },
+    { "remount",    MS_REMOUNT },
+    { "bind",       MS_BIND },
+    { "rec",        MS_REC },
+    { "unbindable", MS_UNBINDABLE },
+    { "private",    MS_PRIVATE },
+    { "slave",      MS_SLAVE },
+    { "shared",     MS_SHARED },
+    { "defaults",   0 },
+    { 0,            0 },
+};
+
+static struct flag_list fs_mgr_flags[] = {
+    { "wait",        MF_WAIT },
+    { "check",       MF_CHECK },
+    { "encryptable=",MF_CRYPT },
+    { "forceencrypt=",MF_FORCECRYPT },
+    { "fileencryption",MF_FILEENCRYPTION },
+    { "nonremovable",MF_NONREMOVABLE },
+    { "voldmanaged=",MF_VOLDMANAGED},
+    { "length=",     MF_LENGTH },
+    { "recoveryonly",MF_RECOVERYONLY },
+    { "swapprio=",   MF_SWAPPRIO },
+    { "zramsize=",   MF_ZRAMSIZE },
+    { "verify",      MF_VERIFY },
+    { "noemulatedsd", MF_NOEMULATEDSD },
+    { "notrim",       MF_NOTRIM },
+    { "formattable", MF_FORMATTABLE },
+#ifdef MTK_FSTAB_FLAGS
+    { "resize",      MF_RESIZE },
+#endif
+    { "defaults",    0 },
+    { 0,             0 },
+};
+```  
 
 
