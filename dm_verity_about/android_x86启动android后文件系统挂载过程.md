@@ -36,5 +36,5 @@ init.android_x86_64.rc中，在触发fs事件时，mount_all /fs.${ro.hardware}
  86     mount_all /fstab.${ro.hardware}
  87     setprop ro.crypto.fuse_sdcard true
  88 
-｀｀｀　　
+```　　
 mount_all命令将根据fstab.${ro.hardware}亦即fstab.android_x86_64来挂载相关文件系统。  
