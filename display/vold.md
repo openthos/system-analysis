@@ -61,7 +61,7 @@ NetlinkHandler  onevent
 CommandListener:  
 监听framework下发的命令事件,例如volume命令中常见操作:mount,umount,format  
 
-**Volume的概念***
+**Volume的概念**
 
 Volume传统翻译为'卷',是一个可辨认的数据存储（storage）单元,可能是可移动磁盘或者U盘设备;在这里
 一般是指这两样设备,从这个角度来看,vold的管理是以物理存储单元为单位的,而我们的分区则纯粹是逻辑上的;  
@@ -166,3 +166,46 @@ HandlerThread:处理内部的handler事件
 MountServiceHandler:处理和外部的service事件  
 注册了监听USB事件的广播接收  
 中间还有obb文件系统的事情
+
+
+### 多分区支持的设计
+1.对Volume挂载点的拓展
+
+默认Ｕ盘设备单分区模式`usb0 usb1 usb2`，拓展成多分区模式`usb0_0 usb0_1 usb0_2 usb1_0 usb1_1 usb1_2`；
+
+修改了`DirectVolume::getMountpoint()`函数，实现根据U盘分区情况动态分配挂载点名称；
+
+2.对挂载操作的拓展
+
+挂载操作主要在`Volume::mountVol()`函数。
+
+内容包括扫描设备node，扫描U盘分区数目，获取分区文件系统类型，对分区进行挂载操作，U盘设备状态实时修改；
+
+3.对卸载操作的拓展
+
+移动设备支持了多分区挂载，必然需要对多分区卸载进行支持。
+
+修改函数`Volume::doUnmount()`,多分区卸载操作如下：
+```
+    n = getDeviceNodes((dev_t *) &deviceNodes, 16);
+    if (!n) {
+       SLOGE("Failed to get device nodes (%s)\n", strerror(errno));
+    }else{
+       for (i = 1; i < n; i++) {
+               char devicePath[255];
+
+           sprintf(devicePath, "/dev/block/vold/%d:%d", major(deviceNodes[i]),
+                           minor(deviceNodes[i]));
+
+           SLOGI("Unmounting the volume (%s)\n", devicePath);
+
+           if (doUnmount(getMountpoint(i), force) != 0) {
+                   SLOGE("Failed to unmount %s (%s)", devicePath, strerror(errno));
+                   continue;
+           }
+       }
+    }
+```
+
+
+
