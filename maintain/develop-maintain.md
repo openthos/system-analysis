@@ -21,7 +21,23 @@ openthos系统的开发环境构建与维护，包括基于docker的编译环境
 设计包括开发编译环境构建，git/repo源代码版本管理系统构建，实时维护定期升级。
 
 ### 编译环境的构建
-安装好docker之后创建新docker:
+基于Docker实现开发环境的快速构建，一个可以短时间内启动所有开发环境所需服务的灵活便利的可行性方案。
+
+在使用docker之前你要明白两个概念：
+- image 镜像
+- container 容器
+
+这两个是整个docker的基础概念。image是静态的，类比为面向对象就是一个类；container是动态运行的，类比为面向对象就是一个实例化的对象。
+
+一般，container是可运行的，我们启动一个container之后，这个container里面就是我们基于ubuntu的编译环境。
+
+理解了基本概念，接下来要做的事情就是构建一个合适的的image，这个image里面应该包含一切开发编译时候所需要的东西。
+
+之后基于此image创建container。启动container后我们就可以在这个container环境上工作了。这个时候container应该可以跟宿主共享文件，并且可以在本局域网内可以被访问到。
+
+首先安装docker engine。
+
+安装好之后创建新docker container:
 
 `docker run -it -v $HOSTDIR:$DOCKERDIR --name ${name} ${IMGID} /bin/bash`
 
@@ -83,10 +99,11 @@ git push devorg multiwindow:refs/heads/multiwindow
 
 | 简述 | 类别 | 备注 |
 |---|---|---|
+|有时git下载操作缓慢|源代码|关闭不可访问的ipv6|
 |编译环境时常出现空间不足|开发|可尝试对每位用户进行空间限额|
-|repo版本管理还无法基于用户进行权限控制|开发|无|
+|repo版本管理还无法基于用户进行权限控制|源代码|无|
 
-### 常见问题和解决方法
+### 解决方法
 - 发现git pull or git clone 很慢
 
 把ipv6关闭，例如：
