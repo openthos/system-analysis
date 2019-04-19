@@ -11,8 +11,7 @@ Android系统使用vold服务对Ｕ盘等移动存储设备进行管理，默认
 
 openthos系统实现了对Ｕ盘等移动存储设备的多分区识别挂载功能。
 
-### 当前开发人员
-肖络元
+当前开发人员: 肖络元
 
 ## 功能需求
 - 实现对Ｕ盘等移动存储设备的多分区识别挂载功能。
@@ -23,7 +22,7 @@ openthos系统实现了对Ｕ盘等移动存储设备的多分区识别挂载功
 1|U盘识别挂载多分区|passed|201703|功能完成 肖络元
 
 ## 设计实现
-### Android Vold概述
+### Android Vold情况概述
 目前Android Vold支持的文件系统格式包括:
 `ext2,ext3,ext4,fat32,fat16,extfat,iso9660`
 
@@ -32,6 +31,18 @@ openthos系统实现了对Ｕ盘等移动存储设备的多分区识别挂载功
 不支持在一块移动存储设备上识别挂载多个分区。
 
 ### Android Vold设计实现
+
+Vold工作机制如下：
+- vold进程：管理和控制Android平台外部存储设备，包括SD插拨、挂载、卸载、格式化等；vold进程接收来自内核的外部设备消息。
+- Vold接收来自内核的事件，通过netlink机制。
+Netlink 是一种特殊的 socket；
+Netlink 是一种在内核与用户应用间进行双向数据传输的非常好的方式，用户态应用使用标准的socket API 就可以使用 netlink 提供的强大功能；
+Netlink是一种异步通信机制，在内核与用户态应用之间传递的消息保存在socket缓存队列中；
+内核通过Netlink发送uEvent格式消息给用户空间程序；外部设备发生变化，Kernel发送uevent消息。
+
+Vold框架图如下
+![vold_arch](vold_arch.gif)
+
 默认情况一个U盘只有一个分区,在代码中是指volume;
 /storage/usb0中usb0即是volume的label,如果存在多个分区那么当有一个分区成功挂载到/storage/usb0上时,其他所有的分区都放弃挂载;  
 这种是不合理的设计,在AndroidM已经修复,不再使用固定的挂载点而是根据分区的Label动态创建挂载点;
@@ -89,6 +100,7 @@ flag:这个volume的label标示位usb0,非模拟的u盘
 auto	/storage/usb0	vfat	defaults	wait,noemulatedsd,voldmanaged=usb0:auto
 ```
 根据上面的配置文件生成4个volume的实例,以备在插入U盘时,U盘的信息和状态都在一个volume中管理;
+
 ### U盘插入事件
 VolumeManager::handleBlockEvent:调用在初始化时构建的volume来进行依次处理,如果有一个可以处理则结束循环;
 
