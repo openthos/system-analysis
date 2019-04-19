@@ -34,10 +34,10 @@ openthos系统实现了对Ｕ盘等移动存储设备的多分区识别挂载功
 
 Vold工作机制如下：
 - vold进程：管理和控制Android平台外部存储设备，包括SD插拨、挂载、卸载、格式化等；vold进程接收来自内核的外部设备消息。
-- Vold接收来自内核的事件，通过netlink机制。
-Netlink 是一种特殊的 socket；
-Netlink 是一种在内核与用户应用间进行双向数据传输的非常好的方式，用户态应用使用标准的socket API 就可以使用 netlink 提供的强大功能；
-Netlink是一种异步通信机制，在内核与用户态应用之间传递的消息保存在socket缓存队列中；
+- Vold接收来自内核的事件，通过netlink机制。<br>
+Netlink 是一种特殊的 socket；<br>
+Netlink 是一种在内核与用户应用间进行双向数据传输的非常好的方式，用户态应用使用标准的socket API 就可以使用 netlink 提供的强大功能；<br>
+Netlink是一种异步通信机制，在内核与用户态应用之间传递的消息保存在socket缓存队列中；<br>
 内核通过Netlink发送uEvent格式消息给用户空间程序；外部设备发生变化，Kernel发送uevent消息。
 
 Vold框架图如下
@@ -58,10 +58,10 @@ Vold框架图如下
 
 在开始时会新建以下几个类的单例:  
 
-VolumeManager:  
+- VolumeManager:  
 作为Vold的中控函数,所有的上传,下发事件都会经过VolumeManager;  
 
-NetlinkManager:  
+- NetlinkManager:  
 监测kernel上传的uevent事件,其中我们只关注disk和part的add,remove事件  
 它启动时是建立一个socket来并勇socket来构建了一个NetlinkHandler,最终调用VolumeManager->handleBlockEvent事件:
 ```
@@ -69,7 +69,7 @@ NetlinkListener onDataAvailable
       |^           |
 NetlinkHandler  onevent
 ```
-CommandListener:  
+- CommandListener:  
 监听framework下发的命令事件,例如volume命令中常见操作:mount,umount,format  
 
 **Volume的概念**
@@ -218,6 +218,8 @@ MountServiceHandler:处理和外部的service事件
        }
     }
 ```
+### 可能存在的问题
+Android 5.1和Android 8.1的Vold服务变动较大，如果需要把5.1的U盘多分区支持功能移植到8.1，并不方便于移植。
 
 
 
