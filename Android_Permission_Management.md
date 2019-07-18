@@ -2,7 +2,13 @@
 
 ### 研究方法
 
-基于[Android Developer 官方开发文档](https://developer.android.google.cn/reference/android/Manifest.permission.html)，截至api level 28，过滤掉已废弃权限及系统权限，获取应用程序可申请的权限如下：
+基于Android Developer 官方开发文档：
+
+[Manifest.permission](https://developer.android.google.cn/reference/android/Manifest.permission.html)
+
+[Manifest.permission_group](https://developer.android.google.cn/reference/android/Manifest.permission_group)
+
+截至api level 28，过滤掉已废弃权限及系统权限，获取应用程序可申请的权限如下：
 
 ```
     <uses-permission android:name="android.permission.ACCEPT_HANDOVER" />
