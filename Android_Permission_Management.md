@@ -8,7 +8,7 @@
 
 [Manifest.permission_group](https://developer.android.google.cn/reference/android/Manifest.permission_group)
 
-截至api level 28，过滤掉已废弃权限及系统权限，获取应用程序可申请的权限如下：
+截至api level 27，过滤掉已废弃权限及系统权限，获取应用程序可申请的权限如下：
 
 ```
     <uses-permission android:name="android.permission.ACCEPT_HANDOVER" />
