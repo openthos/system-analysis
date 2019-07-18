@@ -104,6 +104,8 @@
 
 ![](2.png)
 
+### 运行时权限与安装时权限的对应关系
+
 Body Sensors
 * BODY_SENSRS
 
