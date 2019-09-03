@@ -1,6 +1,6 @@
 # Android 联系人虚拟权限分析与设计
 
-本文
+本文的主要内容是通过对应用程序访问联系人的行为进行分析，进一步分析流程中所依赖的ContentResolver、ContentProvider、ApplicationContentResolver、ActivityThread、ActivityManagerService等类中的关键代码，提供一种使用Android Studio IDE进行调试分析的研究方法，将联系人虚拟权限问题分解为找到适合注入虚拟权限鉴权代码的位置、Uri伪造与识别、虚拟联系人数据的实现三个关键问题。
 
 ## 应用程序访问联系人行为分析
 
@@ -119,6 +119,136 @@ ApplicationContentResolver是ContextImpl内部定义的一个类，继承自Cont
         protected int resolveUserIdFromAuthority(String auth) {...}
     }
 ```
+
+由ContentProvider提供对数据的操作接口，如query、insert、delete、update操作：
+```
+    public final @Nullable Cursor query(final @RequiresPermission.Read @NonNull Uri uri,
+            @Nullable String[] projection, @Nullable Bundle queryArgs,
+            @Nullable CancellationSignal cancellationSignal)
+    {...}
+```
+```
+    public final @Nullable Uri insert(@RequiresPermission.Write @NonNull Uri url,
+                @Nullable ContentValues values) 
+    {...}
+```
+```
+    public final int delete(@RequiresPermission.Write @NonNull Uri url, @Nullable String where,
+            @Nullable String[] selectionArgs)
+    {}...}
+```
+```
+    public final int update(@RequiresPermission.Write @NonNull Uri uri,
+            @Nullable ContentValues values, @Nullable String where,
+            @Nullable String[] selectionArgs)
+    {...}
+```
+
+在query、insert、delete、update操作时，都会调用acquireProvider()方法，acquireProvider()方法会调用IContentProvider类的acquireProvider()方法，ApplicationContentResolver类是IContentProvider类的实现，ApplicationContentResolver类的acquireProvider()方法会调用mMainThread.acquireProvider()方法。
+
+```
+frameworks/base/core/java/android/app/ContextImpl.java
+```
+```
+        @Override
+        protected IContentProvider acquireProvider(Context context, String auth) {
+            return mMainThread.acquireProvider(context,
+                    ContentProvider.getAuthorityWithoutUserId(auth),
+                    resolveUserIdFromAuthority(auth), true);
+        }
+```
+
+### ActivityThread的初始化
+
+mMainThread是ActivityThread类的一个实例。ActivityThread中的createBaseContextForActivity()方法在Activity创建时被调用。为当前Activity创建Context对象。
+
+```
+frameworks/base/core/java/android/app/ActivityThread.java
+```
+```
+    private ContextImpl createBaseContextForActivity(ActivityClientRecord r) {
+        final int displayId;
+        try {
+            displayId = ActivityManager.getService().getActivityDisplayId(r.token);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+
+        ContextImpl appContext = ContextImpl.createActivityContext(
+                this, r.packageInfo, r.activityInfo, r.token, displayId, r.overrideConfig);
+
+        final DisplayManagerGlobal dm = DisplayManagerGlobal.getInstance();
+        // For debugging purposes, if the activity's package name contains the value of
+        // the "debug.use-second-display" system property as a substring, then show
+        // its content on a secondary display if there is one.
+        String pkgName = SystemProperties.get("debug.second-display.pkg");
+        if (pkgName != null && !pkgName.isEmpty()
+                && r.packageInfo.mPackageName.contains(pkgName)) {
+            for (int id : dm.getDisplayIds()) {
+                if (id != Display.DEFAULT_DISPLAY) {
+                    Display display =
+                            dm.getCompatibleDisplay(id, appContext.getResources());
+                    appContext = (ContextImpl) appContext.createDisplayContext(display);
+                    break;
+                }
+            }
+        }
+        return appContext;
+    }
+```
+
+mMainThread的创建位于在ContextImpl类的构造函数中。
+```
+    private ContextImpl(@Nullable ContextImpl container, @NonNull ActivityThread mainThread,
+            @NonNull LoadedApk packageInfo, @Nullable String splitName,
+            @Nullable IBinder activityToken, @Nullable UserHandle user, int flags,
+            @Nullable ClassLoader classLoader) {
+            ...
+            mMainThread = mainThread;
+            mActivityToken = activityToken;
+            mFlags = flags;
+            ...
+            mContentResolver = new ApplicationContentResolver(this, mainThread, user);
+            ...
+    }
+```
+
+acquireProvider()类的实际代码位于：
+```
+    public final IContentProvider acquireProvider(
+            Context c, String auth, int userId, boolean stable) {
+        final IContentProvider provider = acquireExistingProvider(c, auth, userId, stable);
+        if (provider != null) {
+            return provider;
+        }
+
+        // There is a possible race here.  Another thread may try to acquire
+        // the same provider at the same time.  When this happens, we want to ensure
+        // that the first one wins.
+        // Note that we cannot hold the lock while acquiring and installing the
+        // provider since it might take a long time to run and it could also potentially
+        // be re-entrant in the case where the provider is in the same process.
+        ContentProviderHolder holder = null;
+        try {
+            holder = ActivityManager.getService().getContentProvider(
+                    getApplicationThread(), auth, userId, stable);
+        } catch (RemoteException ex) {
+            throw ex.rethrowFromSystemServer();
+        }
+        if (holder == null) {
+            Slog.e(TAG, "Failed to find provider info for " + auth);
+            return null;
+        }
+
+        // Install provider will increment the reference count for us, and break
+        // any ties in the race.
+        holder = installProvider(c, holder, holder.info,
+                true /*noisy*/, holder.noReleaseNeeded, stable);
+        return holder.provider;
+    }
+```
+
+### ActivityManagerService鉴权分析
 
 AMS中ContentProvider权限检查的关键代码，位于：
 ```
