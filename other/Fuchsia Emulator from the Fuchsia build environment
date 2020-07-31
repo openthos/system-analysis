@@ -1,0 +1,115 @@
+### A Standalone Fuchsia Emulator
+After compiling a complete Fuchsia OS, we can execute the following commands to run the native emulator FEMU :
+`cd $FUCHSIA_DIR`
+`fx emu -N`
+But this way we don't know what FEMU is actually doing, and we can't run FEMU outside the Fuchsia build environment.<br>
+So I picked out these files and directories FEMU needs. And organized into [LIST A](#femu) below.
+Copy the Fuchsia files and directories in LIST A to LinuxOS without Fuchsia build environment. Keep the directory structure.
+
+Setup network:
+`sudo ip tuntap add dev qemu mode tap user $USER`
+`sudo ifconfig qemu up`
+
+Then run Fuchsia Emulator(FEMU) with ssh access:
+```
+tools/devshell/emu -N
+```
+You can also add parameters to accelerate graphic:
+`--host-gpu` , using the host GPU
+`--software-gpu` ,software rendering using SwiftShader<br>
+
+`prebuilt/third_party/aemu/linux-x64/emulator` will be called. See the detailed operating parameters:
+```
+fuchsia/prebuilt/third_party/aemu/linux-x64/emulator -feature VirtioInput,GLDirectMem,KVM,Vulkan -window-size 1280x800 -gpu auto -fuchsia -kernel fuchsia/out/default/multiboot.bin -initrd /tmp/tmp.eu8Jd9nVUm/fuchsia-ssh.zbi -m 8192 -serial stdio -vga none -device virtio-keyboard-pci -device virtio_input_multi_touch_pci_1 -smp 4,threads=2 -machine q35 -device isa-debug-exit,iobase=0xf4,iosize=0x04 -enable-kvm -cpu host,migratable=no,+invtsc -netdev type=tap,ifname=qemu,id=net0,script=no -device e1000,netdev=net0,mac=52:54:00:63:5e:7a -drive file=/tmp/tmp.eu8Jd9nVUm/fvm.blk,format=raw,if=none,id=vdisk -device virtio-blk-pci,drive=vdisk -append 'TERM=xterm-256color kernel.serial=legacy kernel.entropy-mixin=14260cdcbbc4515f507ec9f9a6294b81ea2b331365e06d764daa7ff48cdcf0c7 kernel.halt-on-panic=true '
+```
+
+### Run&Debug Zircon under QEMU
+Normally, the following command can run the Fuchsia QEMU:
+`fx qemu -- -s`
+
+Alternatively, We can construct a QEMU excution environment for Zircon.
+Add these files and directories in [LIST B](#zircon) below. Keep the directory structure.
+Run the following command to be able to attach with GDB later:
+```
+tools/devshell/qemu -- -s
+```
+`fuchsia/prebuilt/third_party/qemu/linux-x64/bin/qemu-system-x86_64` will be called.
+The detailed QEMU operating parameters:
+```
+fuchsia/prebuilt/third_party/qemu/linux-x64/bin/qemu-system-x86_64 -kernel fuchsia/out/default/multiboot.bin -initrd fuchsia/out/default/tmp.8yN/fuchsia-ssh.zbi -m 8192 -nographic -drive file=fuchsia/out/default/tmp.8yN/fvm.blk,format=raw,if=none,id=mydisk -device ich9-ahci,id=ahci -device ide-drive,drive=mydisk,bus=ahci.0 -nic none -smp 4,threads=2 -machine q35 -device isa-debug-exit,iobase=0xf4,iosize=0x04 -fw_cfg name=etc/sercon-port,string=0 -cpu Haswell,+smap,-check,-fsgsbase -append 'TERM=xterm-256color kernel.serial=legacy kernel.entropy-mixin=cb8755a857c99d8ac8308220fe065a0904d6b660a8dcbfacdb7870cf91115abb kernel.halt-on-panic=true ' -s
+```
+
+
+According to the detailed QEMU operating parameters, we can manually generate the required files.
+Generate initrd file and drive file: 
+`
+fuchsia/out/default.zircon/tools/zbi --compressed=zstd -o ./fuchsia-ssh.zbi fuchsia/out/default/fuchsia.zbi --entry data/ssh/authorized_keys=fuchsia/.ssh/authorized_keys
+`
+
+`
+source fuchsia/tools/devshell/lib/fvm.sh
+HOST_OUT_DIR=$PWD/fuchsia/out/default/host_x64 fx-fvm-extend-image fuchsia/out/default/obj/build/images/fvm.blk ./fvm.blk
+`
+
+At this time we can manually modify the QEMU parameters. For example, to replace kernel or file system.
+`
+fuchsia/prebuilt/third_party/qemu/linux-x64/bin/qemu-system-x86_64 -kernel fuchsia/out/default.zircon/multiboot.bin -initrd ./fuchsia-ssh.zbi -m 2G -display none -drive file=./fvm.blk,format=raw,if=none,id=mydisk -device ich9-ahci,id=ahci -device ide-drive,drive=mydisk,bus=ahci.0 -serial stdio -append 'kernel.serial=legacy kernel.halt-on-panic=true ' -s
+`
+
+Now we can debug the kernel with "-s" parameter.
+```
+gdb out/default.zircon/kernel-x64-clang/obj/kernel/zircon.elf -x ./out/default.zircon/kernel-x64-clang/obj/kernel/zircon.elf-gdb.py
+(gdb) target extended-remote :1234
+(gdb) break lk_main
+(gdb) continue
+^C
+(gdb) info threads
+
+```
+
+`zircon.elf-gdb.py` is gdb's Zircon debugging script.
+
+---
+##### <a id="femu">LIST A for FEMU</a>
+```
+tools/devshell/
+./.fx-build-dir
+./.config
+./.ssh/authorized_keys
+prebuilt/third_party/aemu/linux-x64/
+prebuilt/third_party/grpcwebproxy/linux-x64/
+
+out/default/rust-project.json
+out/default/fx.config
+out/default/args.gn
+
+out/default/fuchsia.zbi
+out/default/fuchsia.zbi
+out/default/zedboot.zbi
+out/default/zedboot.zbi
+out/default/fuchsia.esp.blk
+out/default/obj/build/images/blob.blk
+out/default/obj/build/images/data.blk
+out/default/obj/build/images/fvm.blk
+out/default/obj/build/images/fvm.sparse.blk
+out/default/obj/build/images/fvm.blob.sparse.blk
+out/default/multiboot.bin
+out/default/zedboot.esp.blk
+out/default/netboot.zbi
+out/default/netboot.zbi
+
+out/default/host-tools/device-finder
+out/default/host_x64/fvm
+
+out/default.zircon/tools/
+```
+
+##### <a id="zircon">LIST B for Zircon using QEMU</a>
+```
+/zircon/scripts/
+prebuilt/third_party/qemu/linux-x64/
+out/default.zircon/multiboot.bin
+out/default.zircon/kernel-x64-clang/obj/kernel/zircon.elf
+out/default.zircon/kernel-x64-clang/obj/kernel/zircon.elf-gdb.py
+
+```
