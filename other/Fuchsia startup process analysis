@@ -1,0 +1,55 @@
+### Fuchsia启动流程分析
+
+0. ZBI镜像中包含Fuchsia内核zircon和RAM disk (bootfs)以及特定硬件信息、内核“command line”；
+
+1. 内核zircon开启用户空间，启动第一个用户进程userboot。
+    - userboot通过vDSO进行标准系统调用；
+    - userboot elf镜像在内核编译时嵌入到内核中；
+    - 内核将userboot和vDSO都映射到第一个用户进程，然后启动userboot的入口；
+
+2. userboot从ZBI镜像中找到bootfs，LZ4格式解压并复制到一个VMO。从bootfs中启动bootsvc，包括它的动态链接库；下一个启动程序也可以由环境变量“userboot=”指定。
+
+3. bootsvc, usermode加载的第一个程序。
+提供的系统服务：
+   - bootfs “启动文件系统” 服务，在系统自举后，挂载到”/boot”；
+   - 从bootfs加载的加载服务；
+
+    bootsvc其中一个主要工作是启动组件管理器component manager；从bootfs启动一个bootsvc.next内核参数指定的程序，默认是bin/component_manager；
+
+4. component manager驱动v2组件框架。此框架控制程序的运行方式和时间，以及从其他程序可访问的功能。树形组织:root, bootstrap -driver_manager -fshost, core -appmgr 
+    - 存储在bootfs中的重要组件fshost和driver manager，为存储在package包中的appmgr构建完备的系统功能;
+    - appmgr启动所有的用户应用软件;
+
+5. driver manager驱动管理器，查找硬件，为之运行合适的驱动，向Fuchsia暴露devfs的句柄；driver manager创建需要的DevHost
+    - DevHost是一个包含一个或多个驱动的进程；每个驱动程序都是存储在bootfs或包中的动态库，当要运行驱动程序时，它会动态链接到驱动程序主机中后执行;
+    - 包packages中的驱动，在driver manager创建的一个线程中，等待/system-delayed文件系统可用后加载驱动；
+
+6. fshost查找块设备，启动所需的文件系统进程，为Fuchsia提供这些文件系统的句柄；需要访问/dev句柄；
+从每个设备读取头数据，以检测文件系统类型；初始化FVM块，一个动态分配block组到虚拟块地址空间的分区管理器；初始化加密的zxcrypt分区；之后，查找到适当的块设备，启动minfs和blobfs;
+ffshost提供两个目录/pkgfs-delayed 和 /system-delayed, 以检测文件系统的可用性。
+
+7. appmgr运行v1组件框架。component manager使用fshost的句柄/pkgfs-delayed加载appmgr. 
+    - v2框架的功能可被转发到appmgr中的sys领域；sysmgr管理的服务可被暴露给v2框架；与v2通过这种机制沟通彼此；
+    - appmgr被标记成一个eager组件。appmgr存储在一个包package，依赖fshost的/pkgfs-delayed句柄，fshost需要访问driver manager的/dev句柄。驱动组件和文件系统组件都起来后，component manager完成载入appmgr；
+
+8. v1组件初始化
+    - appmgr创建一个顶级领域”app”;
+    - 在app域启动第一个v1组件sysmgr，用于管理”sys”领域；
+    - sys域有大量的FIDL服务；这些服务可由sysmgr配置文件.config管理；例如sshd-host.cmx远程登陆、scenic.cmx图形引擎；
+![appmgr领域](https://user-images.githubusercontent.com/8327091/87868568-be81ab80-c9c9-11ea-8ea9-c4ebbda71b2a.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
